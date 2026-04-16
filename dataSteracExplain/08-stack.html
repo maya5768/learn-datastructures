@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחסנית (Stack)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 מחסנית (Stack)</h1>
+            <p class="subtitle">LIFO – הכנס אחרון, הוצא ראשון</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זו מחסנית?</h2>
+            <div class="intro-box">
+                <p><strong>מחסנית (Stack)</strong> היא מבנה נתונים שמאחסן אוסף של איברים תוך שמירה על סדר הכנסת האיברים. הגישה לאיברים מתבצעת בשיטת <strong>"הכנס אחרון – הוצא ראשון"</strong> (LIFO - Last In, First Out).</p>
+                <p>אפשר לדמיין מחסנית כערימת צלחות: מוסיפים צלחת למעלה ומוציאים צלחת מלמעלה. לא ניתן להגיע לצלחת בתחתית הערימה בלי להוציא קודם את כל הצלחות שמעליה.</p>
+            </div>
+
+            <h2>הפעולות הבסיסיות</h2>
+            <p>כל הפעולות על המחסנית מתבצעות בזמן <span class="complexity excellent">O(1)</span>:</p>
+
+            <table>
+                <tr>
+                    <th>פעולה</th>
+                    <th>חתימה</th>
+                    <th>תיאור</th>
+                </tr>
+                <tr>
+                    <td><strong>push</strong></td>
+                    <td><code>void push(int x)</code></td>
+                    <td>מוסיף את x לראש המחסנית</td>
+                </tr>
+                <tr>
+                    <td><strong>pop</strong></td>
+                    <td><code>int pop()</code></td>
+                    <td>מוציא ומחזיר את האיבר שבראש המחסנית</td>
+                </tr>
+                <tr>
+                    <td><strong>isEmpty</strong></td>
+                    <td><code>boolean isEmpty()</code></td>
+                    <td>מחזיר true אם המחסנית ריקה</td>
+                </tr>
+            </table>
+
+            <div class="warning-box">
+                <p>⚠️ אם מנסים לבצע <code>pop</code> על מחסנית ריקה – יש לטפל בזה, למשל על ידי <strong>זריקת חריגה (Exception)</strong>.</p>
+            </div>
+
+            <h2>דוגמה להפעלת מחסנית</h2>
+            <p>נכניס למחסנית את האיברים 2, 5, 8, 4 (מהראשון לאחרון):</p>
+
+            <div class="visualization">
+                <p><strong>שלב 1</strong>: push(2)</p>
+                <p><span class="node-box">2</span> ← ראש המחסנית</p>
+
+                <p><strong>שלב 2</strong>: push(5)</p>
+                <p><span class="node-box">5</span> ← ראש<br>
+                <span class="node-box">2</span></p>
+
+                <p><strong>שלב 3</strong>: push(8)</p>
+                <p><span class="node-box">8</span> ← ראש<br>
+                <span class="node-box">5</span><br>
+                <span class="node-box">2</span></p>
+
+                <p><strong>שלב 4</strong>: push(4)</p>
+                <p><span class="node-box" style="background: #ffeb3b;">4</span> ← ראש<br>
+                <span class="node-box">8</span><br>
+                <span class="node-box">5</span><br>
+                <span class="node-box">2</span></p>
+
+                <p><strong>אם נבצע pop()</strong> – האיבר שיוצא הוא <strong>4</strong> (האחרון שנכנס).</p>
+            </div>
+
+            <h2>תרגיל מדגים</h2>
+            <div class="intro-box">
+                <p>נתונה מחסנית ריקה <code>stk</code>. מה יהיה סדר הוצאת האיברים לאחר רצף הפעולות הבא?</p>
+                <pre><code>stk.push(6);    stk.push(5);    stk.pop();
+stk.push(2);    stk.push(4);    stk.pop();
+stk.push(3);    stk.push(9);    stk.pop();</code></pre>
+            </div>
+
+            <h3>פתרון צעד-אחר-צעד:</h3>
+            <table>
+                <tr>
+                    <th>פעולה</th>
+                    <th>מצב המחסנית</th>
+                    <th>הוצאה</th>
+                </tr>
+                <tr><td>push(6)</td><td>[6]</td><td>-</td></tr>
+                <tr><td>push(5)</td><td>[6, 5]</td><td>-</td></tr>
+                <tr><td>pop()</td><td>[6]</td><td><strong>5</strong></td></tr>
+                <tr><td>push(2)</td><td>[6, 2]</td><td>5</td></tr>
+                <tr><td>push(4)</td><td>[6, 2, 4]</td><td>5</td></tr>
+                <tr><td>pop()</td><td>[6, 2]</td><td>5, <strong>4</strong></td></tr>
+                <tr><td>push(3)</td><td>[6, 2, 3]</td><td>5, 4</td></tr>
+                <tr><td>push(9)</td><td>[6, 2, 3, 9]</td><td>5, 4</td></tr>
+                <tr><td>pop()</td><td>[6, 2, 3]</td><td>5, 4, <strong>9</strong></td></tr>
+            </table>
+            <p><strong>סדר ההוצאה הסופי:</strong> 5, 4, 9</p>
+
+            <h2>מימוש מחסנית באמצעות מערך</h2>
+
+            <div class="intro-box">
+                <p>נממש מחסנית שמוגבלת בגודלה, עם כל הפעולות ב-<span class="complexity excellent">O(1)</span>. נשתמש במערך בגודל <code>maxSize</code> ובמשתנה <code>top</code> שיציין את מיקום האיבר האחרון.</p>
+            </div>
+
+            <h3>מימוש ב-Java:</h3>
+            <pre><code><span class="keyword">public class</span> <span class="type">Stack</span> {
+    <span class="keyword">private int</span> maxSize;
+    <span class="keyword">private int</span>[] stackArray;
+    <span class="keyword">private int</span> top;
+    
+    <span class="comment">// בנאי</span>
+    <span class="keyword">public</span> <span class="function">Stack</span>(<span class="type">int</span> maxSize) {
+        <span class="keyword">this</span>.maxSize = maxSize;
+        stackArray = <span class="keyword">new int</span>[<span class="keyword">this</span>.maxSize];
+        top = -<span class="number">1</span>;            <span class="comment">// מחסנית ריקה</span>
+    }
+    
+    <span class="comment">// בדיקה אם המחסנית מלאה</span>
+    <span class="keyword">public</span> <span class="type">Boolean</span> <span class="function">isFull</span>() {
+        <span class="keyword">return</span> (top == maxSize - <span class="number">1</span>);
+    }
+    
+    <span class="comment">// בדיקה אם המחסנית ריקה</span>
+    <span class="keyword">public</span> <span class="type">Boolean</span> <span class="function">isEmpty</span>() {
+        <span class="keyword">return</span> (top == -<span class="number">1</span>);
+    }
+    
+    <span class="comment">// הוספת איבר</span>
+    <span class="keyword">public void</span> <span class="function">push</span>(<span class="type">int</span> value) {
+        <span class="keyword">if</span>(<span class="function">isFull</span>()) {
+            System.out.<span class="function">print</span>(<span class="string">"המחסנית מלאה ולא ניתן להוסיף איבר"</span>);
+        } <span class="keyword">else</span> {
+            stackArray[++top] = value;
+        }
+    }
+    
+    <span class="comment">// הוצאת איבר</span>
+    <span class="keyword">public int</span> <span class="function">pop</span>() {
+        <span class="keyword">if</span>(<span class="function">isEmpty</span>()) {
+            System.out.<span class="function">print</span>(<span class="string">"המחסנית ריקה ולא ניתן להסיר איבר"</span>);
+            <span class="keyword">return</span> -<span class="number">1</span>;
+        } <span class="keyword">else</span> {
+            <span class="keyword">return</span> stackArray[top--];
+        }
+    }
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li><code>top = -1</code> בהתחלה מציין שהמחסנית ריקה.</li>
+                <li><code>top == maxSize - 1</code> → המחסנית מלאה.</li>
+                <li><code>stackArray[++top] = value</code> → קודם מגדילים את top, אז שמים את הערך במקום החדש.</li>
+                <li><code>stackArray[top--]</code> → מחזירים את הערך במיקום top, ואז מקטינים את top.</li>
+            </ul>
+
+            <h2>תרגיל: מציאת מקסימום במחסנית</h2>
+            <p><strong>שאלה</strong>: כתבו שיטה שמקבלת כפרמטר מחסנית <code>s</code> ומחזירה את האיבר המקסימלי בה. בסיום השיטה המחסנית חייבת להיות במצבה המקורי.</p>
+
+            <h3>פתרון – שימוש במחסנית עזר:</h3>
+            <pre><code><span class="keyword">public int</span> <span class="function">findMaxInStack</span>(<span class="type">Stack</span> s) {
+    <span class="type">Stack</span> temp = <span class="keyword">new</span> <span class="function">Stack</span>();
+    <span class="type">int</span> max = Integer.MIN_VALUE;
+    
+    <span class="comment">// מוציאים איברים מ-s ושומרים ב-temp תוך חיפוש מקסימום</span>
+    <span class="keyword">while</span>(!s.<span class="function">isEmpty</span>()) {
+        <span class="type">int</span> x = s.<span class="function">pop</span>();
+        <span class="keyword">if</span>(x &gt; max)
+            max = x;
+        temp.<span class="function">push</span>(x);
+    }
+    
+    <span class="comment">// מחזירים את האיברים מ-temp בחזרה ל-s</span>
+    <span class="keyword">while</span>(!temp.<span class="function">isEmpty</span>())
+        s.<span class="function">push</span>(temp.<span class="function">pop</span>());
+    
+    <span class="keyword">return</span> max;
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ol>
+                <li>מוציאים כל איבר מ-<code>s</code>, משווים ל-max, ושומרים ב-<code>temp</code>.</li>
+                <li>בסוף הלולאה הראשונה, <code>s</code> ריקה ו-<code>temp</code> מכילה את הכל בסדר הפוך.</li>
+                <li>מחזירים את כל האיברים מ-<code>temp</code> ל-<code>s</code> – כך הסדר חוזר למקור!</li>
+            </ol>
+
+            <h2>שימוש מעשי: חישוב ביטויים אלגבריים</h2>
+            <p>מחסניות שימושיות מאוד לחישוב ביטויים עם סוגריים. נדגים על הביטוי:</p>
+            <pre><code>( 2 + ( ( 5 + 3 ) * ( 2 * 4 ) ) )</code></pre>
+
+            <h3>האלגוריתם:</h3>
+            <pre><code><span class="type">Stack</span> vals = <span class="keyword">new</span> <span class="function">Stack</span>();    <span class="comment">// מחסנית ערכים</span>
+<span class="type">Stack</span> ops = <span class="keyword">new</span> <span class="function">Stack</span>();     <span class="comment">// מחסנית אופרטורים</span>
+
+<span class="keyword">while</span>(s != <span class="keyword">null</span>) {
+    <span class="keyword">if</span>(<span class="function">isOperator</span>(s))
+        ops.<span class="function">push</span>(s);           <span class="comment">// אופרטור → מחסנית אופרטורים</span>
+    <span class="keyword">else if</span>(<span class="function">isNumber</span>(s))
+        vals.<span class="function">push</span>(s);          <span class="comment">// מספר → מחסנית ערכים</span>
+    <span class="keyword">else if</span>(s == <span class="string">")"</span>) {      <span class="comment">// סוגר סוגריים - מחשבים!</span>
+        <span class="type">String</span> op = ops.<span class="function">pop</span>();
+        <span class="type">int</span> v1 = vals.<span class="function">pop</span>();
+        <span class="type">int</span> v2 = vals.<span class="function">pop</span>();
+        <span class="type">int</span> res = <span class="function">perform</span>(op, v1, v2);
+        vals.<span class="function">push</span>(res);        <span class="comment">// תוצאה חזרה למחסנית</span>
+    }
+    s = <span class="function">nextToken</span>();
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li>סוגר פותח <code>(</code> – מתעלמים ממנו.</li>
+                <li>מספר – דוחפים למחסנית הערכים.</li>
+                <li>אופרטור (+, -, *, /) – דוחפים למחסנית האופרטורים.</li>
+                <li>סוגר סוגריים <code>)</code> – מבצעים את הפעולה: מוציאים אופרטור, שני ערכים, מחשבים, ודוחפים חזרה.</li>
+            </ul>
+
+            <div class="success-box">
+                <p>✅ בסוף החישוב: <code>(5+3) * (2*4) + 2 = 8 * 8 + 2 = 66 + 2 = 72</code></p>
+            </div>
+
+            <h2>שימושים נפוצים במחסנית</h2>
+            <ul>
+                <li><strong>בקשות חזרה (Undo/Redo)</strong> בתוכנות עריכה.</li>
+                <li><strong>מימוש קריאות רקורסיביות</strong> – המחשב משתמש במחסנית.</li>
+                <li><strong>בדיקת איזון סוגריים</strong> בטקסט/קוד.</li>
+                <li><strong>חישוב ביטויים</strong> (Postfix, Infix).</li>
+                <li><strong>היסטוריית דפדוף</strong> בדפדפן אינטרנט.</li>
+                <li><strong>סריקת עצים</strong> – DFS בגרפים ועצים.</li>
+            </ul>
+
+            <h2>סיכום זמני ריצה</h2>
+            <table>
+                <tr>
+                    <th>פעולה</th>
+                    <th>זמן ריצה</th>
+                </tr>
+                <tr><td>push</td><td><span class="complexity excellent">O(1)</span></td></tr>
+                <tr><td>pop</td><td><span class="complexity excellent">O(1)</span></td></tr>
+                <tr><td>isEmpty</td><td><span class="complexity excellent">O(1)</span></td></tr>
+                <tr><td>peek (צפייה בראש)</td><td><span class="complexity excellent">O(1)</span></td></tr>
+            </table>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="09-queue.html">הבא: תור ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

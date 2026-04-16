@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מיון מהיר (Quick Sort)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ מיון מהיר (Quick Sort)</h1>
+            <p class="subtitle">אלגוריתם מיון מהיר ו-in-place</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זה מיון מהיר?</h2>
+            <div class="intro-box">
+                <p><strong>מיון מהיר (Quick Sort)</strong> הוא אלגוריתם מיון יעיל המבוסס על גישת "הפרד ומשול". בניגוד למיון מיזוג, הוא <strong>ממיין במקום (in-place)</strong> ולא דורש זיכרון נוסף משמעותי.</p>
+            </div>
+
+            <h3>רעיון האלגוריתם:</h3>
+            <ol>
+                <li><strong>בחירת ציר (Pivot)</strong>: בחר איבר במערך שישמש כציר.</li>
+                <li><strong>חלוקה (Partition)</strong>: העבר את כל האיברים הקטנים מהציר לתחילת המערך, ואת האיברים הגדולים ממנו לסוף.</li>
+                <li><strong>רקורסיה</strong>: קרא רקורסיבית לאלגוריתם על שני חלקי המערך (ללא הציר).</li>
+            </ol>
+
+            <h2>שלב ה-Partition (חלוקה)</h2>
+            
+            <div class="visualization">
+                <p><strong>מערך התחלתי:</strong> ננסה למיין את המערך סביב הציר (האיבר הראשון = 4):</p>
+                <p>
+                    <span class="node-box" style="background: #ffeb3b;">4</span>
+                    <span class="node-box">10</span>
+                    <span class="node-box">15</span>
+                    <span class="node-box">2</span>
+                    <span class="node-box">7</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box">14</span>
+                    <span class="node-box">3</span>
+                </p>
+                <p><strong>אחרי partition</strong> (איברים &lt; 4 משמאל, &gt; 4 מימין):</p>
+                <p>
+                    <span class="node-box">2</span>
+                    <span class="node-box">3</span>
+                    <span class="node-box" style="background: #ffeb3b;">4</span>
+                    <span class="node-box">15</span>
+                    <span class="node-box">10</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box">14</span>
+                    <span class="node-box">7</span>
+                </p>
+                <p>הציר (4) מוצב במקומו הסופי! כעת ממיינים רקורסיבית את החלק השמאלי והימני.</p>
+            </div>
+
+            <h2>מימוש ב-Java</h2>
+
+            <h3>שיטת quicksort הראשית:</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">quicksort</span>(<span class="type">int</span>[] a, <span class="type">int</span> start, <span class="type">int</span> end) {
+    <span class="keyword">if</span>(end &lt;= start)
+        <span class="keyword">return</span>;                              <span class="comment">// תנאי עצירה</span>
+    
+    <span class="type">int</span> p = <span class="function">partition</span>(a, start, end);      <span class="comment">// חלוקה וקבלת מיקום הציר</span>
+    
+    <span class="function">quicksort</span>(a, start, p - <span class="number">1</span>);           <span class="comment">// מיון החלק השמאלי</span>
+    <span class="function">quicksort</span>(a, p + <span class="number">1</span>, end);             <span class="comment">// מיון החלק הימני</span>
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li><code>end &lt;= start</code> – תנאי העצירה: אם יש 0 או 1 איברים.</li>
+                <li><code>partition</code> – מחלק את המערך ומחזיר את האינדקס שבו ממוקם הציר.</li>
+                <li>הקריאות הרקורסיביות ממיינות את שני החלקים (<strong>ללא</strong> הציר, כי הוא כבר במקומו).</li>
+            </ul>
+
+            <h3>שיטת ה-partition:</h3>
+            <pre><code><span class="keyword">public int</span> <span class="function">partition</span>(<span class="type">int</span>[] a, <span class="type">int</span> left, <span class="type">int</span> right) {
+    <span class="type">int</span> pivot = a[left];        <span class="comment">// הציר – האיבר הראשון</span>
+    <span class="type">int</span> p = left;
+    <span class="type">int</span> q = right;
+    
+    <span class="keyword">while</span>(p &lt; q) {
+        <span class="comment">// מחפש מימין איבר קטן או שווה לציר</span>
+        <span class="keyword">while</span>(a[q] &gt; pivot && p &lt; q) q--;
+        
+        <span class="comment">// מחפש משמאל איבר גדול מהציר</span>
+        <span class="keyword">while</span>(a[p] &lt;= pivot && p &lt; q) p++;
+        
+        <span class="function">swap</span>(a, p, q);           <span class="comment">// מחליף ביניהם</span>
+    }
+    
+    <span class="function">swap</span>(a, left, p);         <span class="comment">// מציב את הציר במקומו</span>
+    <span class="keyword">return</span> p;                  <span class="comment">// מחזיר את מיקום הציר</span>
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ol>
+                <li><strong>בחירת הציר</strong>: בחרנו את האיבר הראשון.</li>
+                <li><strong>שני מצביעים</strong>: <code>p</code> זז מהשמאל ימינה, <code>q</code> זז מהימין שמאלה.</li>
+                <li><strong>החלפה</strong>: כאשר <code>p</code> מוצא איבר גדול מהציר ו-<code>q</code> מוצא איבר קטן או שווה לציר, מחליפים ביניהם.</li>
+                <li><strong>סיום</strong>: כאשר <code>p = q</code>, מחליפים את הציר עם המיקום הזה.</li>
+            </ol>
+
+            <h3>פונקציית swap עזר:</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">swap</span>(<span class="type">int</span>[] a, <span class="type">int</span> i, <span class="type">int</span> j) {
+    <span class="type">int</span> temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+}</code></pre>
+
+            <h2>ניתוח זמן ריצה</h2>
+
+            <h3>מקרה ממוצע (Average Case):</h3>
+            <p>כאשר הציר מחלק את המערך לחצאים שווים בערך:</p>
+            <pre><code>T(n) = 2T(n/2) + n</code></pre>
+            <p>לפי משפט האב (מקרה 2): <code>T(n) = Θ(n log n)</code></p>
+
+            <h3>מקרה גרוע (Worst Case):</h3>
+            <p>כאשר הציר הוא תמיד האיבר המינימלי או המקסימלי (למשל, מערך כבר ממוין):</p>
+            <div class="visualization">
+                <p>
+                    <span class="node-box" style="background: #ff5252; color: white;">1</span>
+                    <span class="node-box">2</span>
+                    <span class="node-box">3</span>
+                    <span class="node-box">4</span>
+                    <span class="node-box">5</span>
+                    <span class="node-box">...</span>
+                    <span class="node-box">n</span>
+                </p>
+                <p>כל partition מחלק ל-0 ו-(n-1) איברים!</p>
+            </div>
+            <pre><code>T(n) = T(n-1) + n = O(n²)</code></pre>
+
+            <h3>מקרה טוב (Best Case):</h3>
+            <p>כאשר הציר הוא תמיד האיבר האמצעי בדיוק:</p>
+            <pre><code>T(n) = 2T(n/2) + n = O(n log n)</code></pre>
+
+            <h2>התמודדות עם המקרה הגרוע – רנדומיזציה</h2>
+
+            <div class="warning-box">
+                <h4>⚠️ הבעיה</h4>
+                <p>אם שיטת בחירת הציר צפויה (למשל תמיד האיבר הראשון), <strong>אפשר לבנות קלטים זדוניים</strong> שיגרמו למקרה הגרוע (O(n²)).</p>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ הפתרון: ערבוב רנדומלי</h4>
+                <p>נערבב את איברי המערך באופן אקראי לפני הקריאה הראשונית למיון המהיר. כך ההסתברות למקרה הגרוע נמוכה מאוד.</p>
+            </div>
+
+            <h3>פונקציית shuffle:</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">shuffle</span>(<span class="type">int</span>[] a) {
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) {
+        <span class="type">int</span> j = <span class="function">random</span>(<span class="number">0</span>, a.length - <span class="number">1</span>);
+        <span class="function">swap</span>(a, i, j);
+    }
+}</code></pre>
+            <p>הפונקציה עוברת על כל איבר ומחליפה אותו עם איבר אקראי אחר במערך, כך שמתקבל סידור רנדומלי.</p>
+
+            <h2>בחירת ציר באמצע – דוגמה</h2>
+            <p>אפשרות נוספת היא לבחור את האיבר האמצעי כציר:</p>
+            <pre><code><span class="type">int</span> pivot = a[(left + right) / <span class="number">2</span>];</code></pre>
+
+            <div class="warning-box">
+                <p>גם כאן יש מקרים גרועים! לדוגמה, בהינתן מערך של 10 איברים עם מבנה מסוים, בחירת הציר האמצעי תוביל לבחירת מקסימום או מינימום כל פעם.</p>
+            </div>
+
+            <h2>טבלת זמני ריצה</h2>
+            <table>
+                <tr>
+                    <th>מקרה</th>
+                    <th>זמן ריצה</th>
+                    <th>הסבר</th>
+                </tr>
+                <tr>
+                    <td>מקרה טוב</td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                    <td>הציר מחלק תמיד לחצאים שווים</td>
+                </tr>
+                <tr>
+                    <td>מקרה ממוצע</td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                    <td>הציר מחלק בערך לחצאים</td>
+                </tr>
+                <tr>
+                    <td>מקרה גרוע</td>
+                    <td><span class="complexity average">O(n²)</span></td>
+                    <td>הציר הוא תמיד המינימום/מקסימום</td>
+                </tr>
+                <tr>
+                    <td>זיכרון</td>
+                    <td><span class="complexity excellent">O(log n)</span></td>
+                    <td>עבור הקריאות הרקורסיביות</td>
+                </tr>
+            </table>
+
+            <h2>השוואה: Quick Sort vs Merge Sort</h2>
+            <table>
+                <tr>
+                    <th>פרמטר</th>
+                    <th>Quick Sort</th>
+                    <th>Merge Sort</th>
+                </tr>
+                <tr>
+                    <td>מקרה ממוצע</td>
+                    <td>O(n log n)</td>
+                    <td>O(n log n)</td>
+                </tr>
+                <tr>
+                    <td>מקרה גרוע</td>
+                    <td>O(n²)</td>
+                    <td>O(n log n)</td>
+                </tr>
+                <tr>
+                    <td>זיכרון נוסף</td>
+                    <td>O(log n)</td>
+                    <td>O(n)</td>
+                </tr>
+                <tr>
+                    <td>In-place</td>
+                    <td>✅ כן</td>
+                    <td>❌ לא</td>
+                </tr>
+                <tr>
+                    <td>Stable (יציב)</td>
+                    <td>❌ לא</td>
+                    <td>✅ כן</td>
+                </tr>
+                <tr>
+                    <td>מהיר בפועל</td>
+                    <td>✅ לרוב מהיר יותר</td>
+                    <td>❌ לרוב איטי יותר</td>
+                </tr>
+            </table>
+
+            <div class="key-points">
+                <h4>💡 מתי להשתמש בכל אחד?</h4>
+                <ul>
+                    <li><strong>Quick Sort</strong>: כשמהירות בפועל חשובה וזיכרון מוגבל.</li>
+                    <li><strong>Merge Sort</strong>: כשצריך מיון יציב או ביצועים עקביים במקרה הגרוע.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="06-quick-select.html">הבא: Quick Select ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

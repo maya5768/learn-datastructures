@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>עצים בינאריים (BST)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌳 עצים בינאריים (BST)</h1>
+            <p class="subtitle">Binary Search Tree – עץ חיפוש בינארי</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זה עץ חיפוש בינארי?</h2>
+            <div class="intro-box">
+                <p><strong>עץ חיפוש בינארי (BST - Binary Search Tree)</strong> הוא מבנה נתונים שבו ניתן לחפש, להוסיף ולהסיר ערכים בצורה יעילה. BST הוא סוג של עץ בינרי שבו לכל צומת יש לכל היותר שני "בנים".</p>
+            </div>
+
+            <h2>מושגים בסיסיים בעצים</h2>
+            <div class="visualization">
+                <p><strong>עץ לדוגמה:</strong></p>
+                <pre style="direction: ltr; text-align: center; background: #f8f9fc; color: #1E2761; font-size: 1.1em;">
+       6   ← שורש (Root)
+      / \
+     4   9
+    / \ / \
+   3  5 7  8   ← עלים (Leaves)
+   2
+                </pre>
+            </div>
+
+            <h3>מושגים חשובים:</h3>
+            <ul>
+                <li><strong>שורש (Root)</strong> – הצומת העליונה בעץ.</li>
+                <li><strong>עלה (Leaf)</strong> – צומת ללא בנים.</li>
+                <li><strong>גובה העץ</strong> – מספר הרמות בעץ (או מספר הקשתות מהשורש לעלה הרחוק ביותר).</li>
+                <li><strong>אב (Parent)</strong> – צומת שיש לו בנים.</li>
+                <li><strong>בן (Child)</strong> – צומת שיש לו אב.</li>
+                <li><strong>תת-עץ (Subtree)</strong> – חלק של העץ שמתחיל מצומת מסוים.</li>
+            </ul>
+
+            <h2>מאפייני BST</h2>
+            <div class="key-points">
+                <h4>🔑 שלושת הכללים של BST</h4>
+                <ol>
+                    <li><strong>כל צומת</strong> יכול להכיל לכל היותר שני בנים (שמאלי וימני).</li>
+                    <li><strong>תת-העץ השמאלי</strong> של כל צומת מכיל רק ערכים <strong>קטנים או שווים</strong> לערך הצומת.</li>
+                    <li><strong>תת-העץ הימני</strong> של כל צומת מכיל רק ערכים <strong>גדולים או שווים</strong> לערך הצומת.</li>
+                </ol>
+            </div>
+
+            <h2>מחלקת Node</h2>
+            <pre><code><span class="keyword">public class</span> <span class="type">Node</span> {
+    <span class="keyword">private int</span> value;
+    <span class="keyword">private</span> <span class="type">Node</span> leftSon;
+    <span class="keyword">private</span> <span class="type">Node</span> rightSon;
+    
+    <span class="keyword">public</span> <span class="function">Node</span>(<span class="type">int</span> val) {
+        value = val;
+        leftSon = rightSon = <span class="keyword">null</span>;
+    }
+    
+    <span class="comment">// Getters & Setters</span>
+    <span class="keyword">public int</span> <span class="function">getValue</span>() { <span class="keyword">return</span> value; }
+    <span class="keyword">public</span> <span class="type">Node</span> <span class="function">getLeftSon</span>() { <span class="keyword">return</span> leftSon; }
+    <span class="keyword">public</span> <span class="type">Node</span> <span class="function">getRightSon</span>() { <span class="keyword">return</span> rightSon; }
+    <span class="keyword">public void</span> <span class="function">setLeftSon</span>(<span class="type">Node</span> n) { leftSon = n; }
+    <span class="keyword">public void</span> <span class="function">setRightSon</span>(<span class="type">Node</span> n) { rightSon = n; }
+}</code></pre>
+
+            <h2>פעולות בסיסיות ב-BST</h2>
+
+            <h3>1. חיפוש (Search)</h3>
+            <div class="intro-box">
+                <p>כדי למצוא ערך בעץ:</p>
+                <ol>
+                    <li>מתחילים מהשורש.</li>
+                    <li>משווים את הערך המחפש לערך הצומת הנוכחי.</li>
+                    <li>אם הערך קטן יותר → ממשיכים לתת-העץ השמאלי.</li>
+                    <li>אם הערך גדול יותר → ממשיכים לתת-העץ הימני.</li>
+                    <li>אם שווה → <strong>מצאנו!</strong></li>
+                </ol>
+            </div>
+
+            <h3>מימוש חיפוש ב-Java:</h3>
+            <pre><code><span class="keyword">public boolean</span> <span class="function">search</span>(<span class="type">Node</span> root, <span class="type">int</span> x) {
+    <span class="keyword">if</span>(root == <span class="keyword">null</span>)
+        <span class="keyword">return false</span>;             <span class="comment">// לא נמצא</span>
+    
+    <span class="keyword">if</span>(root.<span class="function">getValue</span>() == x)
+        <span class="keyword">return true</span>;              <span class="comment">// נמצא!</span>
+    
+    <span class="keyword">if</span>(x &lt; root.<span class="function">getValue</span>())
+        <span class="keyword">return</span> <span class="function">search</span>(root.<span class="function">getLeftSon</span>(), x);  <span class="comment">// חפש בשמאל</span>
+    
+    <span class="keyword">return</span> <span class="function">search</span>(root.<span class="function">getRightSon</span>(), x);     <span class="comment">// חפש בימין</span>
+}</code></pre>
+
+            <h3>דוגמה לחיפוש הערך 91:</h3>
+            <div class="visualization">
+                <pre style="direction: ltr; text-align: center; background: #f8f9fc; color: #1E2761;">
+         19              91 > 19 → ימינה
+        /  \
+      16    81           91 > 81 → ימינה
+     /  \   /  \
+    9   18 90  98        91 < 98 → שמאלה
+   /\         /
+  2 12       91          91 = 91 → ✅ מצאנו!
+      /
+     7
+                </pre>
+            </div>
+
+            <h3>2. הוספה (Insert)</h3>
+            <p>ההוספה דומה לחיפוש – מחפשים את המקום הנכון ומוסיפים שם צומת חדש:</p>
+
+            <pre><code><span class="keyword">public void</span> <span class="function">insert</span>(<span class="type">int</span> x) {
+    root = <span class="function">insert</span>(root, x);
+}
+
+<span class="keyword">public</span> <span class="type">Node</span> <span class="function">insert</span>(<span class="type">Node</span> r, <span class="type">int</span> x) {
+    <span class="keyword">if</span>(r == <span class="keyword">null</span>)
+        <span class="keyword">return new</span> <span class="function">Node</span>(x);                         <span class="comment">// מקום פנוי – יוצרים חדש</span>
+    
+    <span class="keyword">if</span>(r.<span class="function">getValue</span>() &gt; x)
+        r.<span class="function">setLeftSon</span>(<span class="function">insert</span>(r.<span class="function">getLeftSon</span>(), x));   <span class="comment">// שמאלה</span>
+    
+    <span class="keyword">if</span>(r.<span class="function">getValue</span>() &lt; x)
+        r.<span class="function">setRightSon</span>(<span class="function">insert</span>(r.<span class="function">getRightSon</span>(), x)); <span class="comment">// ימינה</span>
+    
+    <span class="keyword">return</span> r;
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li>אם <code>r == null</code> – מצאנו מקום פנוי, יוצרים צומת חדש.</li>
+                <li>אם הערך קטן מהצומת – מבקשים רקורסיבית להוסיף בשמאל.</li>
+                <li>אם הערך גדול מהצומת – מבקשים רקורסיבית להוסיף בימין.</li>
+                <li>מחזירים את הצומת (עם השינויים) לקריאה הקודמת.</li>
+            </ul>
+
+            <h3>3. מציאת מינימום ומקסימום</h3>
+            <div class="key-points">
+                <p>ב-BST:</p>
+                <ul>
+                    <li><strong>המינימום</strong> הוא הצומת <strong>השמאלי ביותר</strong> בעץ.</li>
+                    <li><strong>המקסימום</strong> הוא הצומת <strong>הימני ביותר</strong> בעץ.</li>
+                </ul>
+            </div>
+
+            <pre><code><span class="keyword">public</span> <span class="type">Node</span> <span class="function">min</span>(<span class="type">Node</span> root) {
+    <span class="keyword">if</span>(root == <span class="keyword">null</span>)
+        <span class="keyword">return null</span>;
+    <span class="keyword">if</span>(root.<span class="function">getLeftSon</span>() == <span class="keyword">null</span>)
+        <span class="keyword">return</span> root;
+    <span class="keyword">return</span> <span class="function">min</span>(root.<span class="function">getLeftSon</span>());
+}
+
+<span class="keyword">public</span> <span class="type">Node</span> <span class="function">max</span>(<span class="type">Node</span> root) {
+    <span class="keyword">if</span>(root == <span class="keyword">null</span>)
+        <span class="keyword">return null</span>;
+    <span class="keyword">if</span>(root.<span class="function">getRightSon</span>() == <span class="keyword">null</span>)
+        <span class="keyword">return</span> root;
+    <span class="keyword">return</span> <span class="function">max</span>(root.<span class="function">getRightSon</span>());
+}</code></pre>
+
+            <h2>מחיקה מ-BST (Delete)</h2>
+            <p>המחיקה ב-BST היא הפעולה המורכבת ביותר. ישנם שלושה מקרים עיקריים:</p>
+
+            <h3>מקרה 1: הצומת הוא עלה (אין לו בנים)</h3>
+            <div class="success-box">
+                <p>✅ פשוט מוחקים אותו ומעדכנים את הבן הרלוונטי של האב להיות <code>null</code>.</p>
+            </div>
+
+            <h3>מקרה 2: לצומת יש בן אחד בלבד</h3>
+            <div class="info-box">
+                <p>💡 מחברים את ההורה של x ישירות לילד של x. כלומר, הילד של x תופס את מקומו.</p>
+            </div>
+
+            <h3>מקרה 3: לצומת יש שני בנים</h3>
+            <div class="warning-box">
+                <p>⚠️ המקרה המורכב ביותר. יש שתי דרכים לטפל:</p>
+                <ol>
+                    <li><strong>החלפה עם המינימום בתת-עץ הימני</strong>: מוצאים את הצומת השמאלי ביותר בתת-העץ הימני, מעבירים את ערכו לצומת המקורי, ומוחקים את הצומת שמצאנו.</li>
+                    <li><strong>החלפה עם המקסימום בתת-עץ השמאלי</strong>: אותו רעיון, רק מהצד השני.</li>
+                </ol>
+            </div>
+
+            <h3>דוגמה: מחיקת 9 מעץ (שיש לו שני בנים)</h3>
+            <div class="visualization">
+                <p><strong>שלב 1</strong>: מוצאים את המקסימום בתת-עץ השמאלי של 9 – זה 7.</p>
+                <p><strong>שלב 2</strong>: מחליפים את הערך 9 בערך 7.</p>
+                <p><strong>שלב 3</strong>: מוחקים את הצומת המקורי של 7 (שכעת הוא עלה).</p>
+                <p>כעת מבנה ה-BST נשמר.</p>
+            </div>
+
+            <h2>סריקות עץ (Tree Traversals)</h2>
+            <div class="intro-box">
+                <p>ישנן שלוש דרכים עיקריות לעבור על עץ, הנקראות <strong>מסלולים (Traversals)</strong>:</p>
+                <ul>
+                    <li><strong>Inorder</strong>: שמאל → שורש → ימין</li>
+                    <li><strong>Preorder</strong>: שורש → שמאל → ימין</li>
+                    <li><strong>Postorder</strong>: שמאל → ימין → שורש</li>
+                </ul>
+            </div>
+
+            <h3>Inorder – המסלול הכי חשוב!</h3>
+            <div class="success-box">
+                <p>✨ <strong>עובדה מרכזית</strong>: במסלול Inorder של BST, הערכים תמיד מוחזרים <strong>בסדר עולה</strong>!</p>
+                <p>אם קיבלנו רצף לא ממוין ב-Inorder – סימן שהעץ <strong>אינו</strong> BST.</p>
+            </div>
+
+            <h3>מימוש Inorder ב-Java:</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">inorder</span>(<span class="type">Node</span> root) {
+    <span class="keyword">if</span>(root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    
+    <span class="function">inorder</span>(root.<span class="function">getLeftSon</span>());   <span class="comment">// 1. סריקת תת-עץ שמאלי</span>
+    System.out.<span class="function">print</span>(root.<span class="function">getValue</span>() + <span class="string">" "</span>);  <span class="comment">// 2. שורש</span>
+    <span class="function">inorder</span>(root.<span class="function">getRightSon</span>());  <span class="comment">// 3. סריקת תת-עץ ימני</span>
+}</code></pre>
+
+            <h3>דוגמה:</h3>
+            <div class="visualization">
+                <pre style="direction: ltr; text-align: center; background: #f8f9fc; color: #1E2761;">
+      4
+     / \
+    2   6
+   /\   /\
+  1 3  5  7
+                </pre>
+                <p><strong>תוצאת Inorder:</strong> 1, 2, 3, 4, 5, 6, 7 ← סדר עולה ✅</p>
+            </div>
+
+            <h3>Preorder</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">preorder</span>(<span class="type">Node</span> root) {
+    <span class="keyword">if</span>(root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    
+    System.out.<span class="function">print</span>(root.<span class="function">getValue</span>() + <span class="string">" "</span>);  <span class="comment">// 1. שורש</span>
+    <span class="function">preorder</span>(root.<span class="function">getLeftSon</span>());   <span class="comment">// 2. שמאל</span>
+    <span class="function">preorder</span>(root.<span class="function">getRightSon</span>());  <span class="comment">// 3. ימין</span>
+}</code></pre>
+            <p><strong>תוצאת Preorder על העץ לעיל:</strong> 4, 2, 1, 3, 6, 5, 7</p>
+
+            <h3>Postorder</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">postorder</span>(<span class="type">Node</span> root) {
+    <span class="keyword">if</span>(root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    
+    <span class="function">postorder</span>(root.<span class="function">getLeftSon</span>());   <span class="comment">// 1. שמאל</span>
+    <span class="function">postorder</span>(root.<span class="function">getRightSon</span>());  <span class="comment">// 2. ימין</span>
+    System.out.<span class="function">print</span>(root.<span class="function">getValue</span>() + <span class="string">" "</span>);  <span class="comment">// 3. שורש</span>
+}</code></pre>
+            <p><strong>תוצאת Postorder על העץ לעיל:</strong> 1, 3, 2, 5, 7, 6, 4</p>
+
+            <h2>ניתוח זמן ריצה</h2>
+
+            <h3>המקרה הטוב ביותר – עץ מאוזן</h3>
+            <div class="success-box">
+                <p>כאשר העץ <strong>מאוזן</strong> (כמעט "עץ בינארי מושלם"), גובהו הוא <code>O(log n)</code>.</p>
+                <p>כל הפעולות מתבצעות בזמן <span class="complexity excellent">O(log n)</span>.</p>
+            </div>
+
+            <div class="visualization">
+                <p><strong>עץ מאוזן (רמות לפי סדר הנדסי):</strong></p>
+                <p>רמה 0: 1 צומת<br>
+                רמה 1: 2 צמתים<br>
+                רמה 2: 4 צמתים<br>
+                רמה 3: 8 צמתים<br>
+                ...<br>
+                <strong>סך הכל</strong>: 1 + 2 + 4 + 8 + ... = n<br>
+                <strong>גובה</strong>: log₂(n)</p>
+            </div>
+
+            <h3>המקרה הגרוע – עץ "מנוון"</h3>
+            <div class="warning-box">
+                <p>אם מכניסים ערכים בסדר עולה או יורד, העץ נהיה כמו <strong>רשימה מקושרת</strong>!</p>
+                <p>זמן ריצה: <span class="complexity average">O(n)</span></p>
+            </div>
+
+            <div class="visualization">
+                <pre style="direction: ltr; text-align: left; padding-right: 40%;">3
+ \
+  4
+   \
+    6
+     \
+      7
+       \
+        9</pre>
+            </div>
+
+            <h2>טבלת זמני ריצה</h2>
+            <table>
+                <tr>
+                    <th>פעולה</th>
+                    <th>עץ מאוזן</th>
+                    <th>מקרה גרוע</th>
+                </tr>
+                <tr><td>חיפוש</td><td><span class="complexity excellent">O(log n)</span></td><td><span class="complexity average">O(n)</span></td></tr>
+                <tr><td>הוספה</td><td><span class="complexity excellent">O(log n)</span></td><td><span class="complexity average">O(n)</span></td></tr>
+                <tr><td>מחיקה</td><td><span class="complexity excellent">O(log n)</span></td><td><span class="complexity average">O(n)</span></td></tr>
+                <tr><td>מינימום/מקסימום</td><td><span class="complexity excellent">O(log n)</span></td><td><span class="complexity average">O(n)</span></td></tr>
+                <tr><td>סריקה מלאה</td><td><span class="complexity good">O(n)</span></td><td><span class="complexity good">O(n)</span></td></tr>
+            </table>
+
+            <h2>איזון עצים – עצי AVL (חומר מתקדם)</h2>
+            <div class="intro-box">
+                <p>כדי לפתור את בעיית העץ המנוון, הומצאו עצים <strong>מאוזנים אוטומטית</strong> כמו <strong>AVL</strong>. עץ AVL הוא עץ חיפוש בינארי שבו לכל צומת, ההפרש בין גובה הבן השמאלי לבן הימני הוא 0, 1 או -1.</p>
+                <p><strong>פקטור איזון:</strong> <code>balance_factor = height(left) - height(right)</code></p>
+            </div>
+
+            <h3>איך שומרים על איזון? – גלגולים (Rotations)</h3>
+            <p>כאשר עץ מתחיל להיות לא מאוזן, מבצעים <strong>גלגול (Rotation)</strong>. יש ארבעה מקרים עיקריים:</p>
+            <ol>
+                <li><strong>LL</strong>: הנתיב שמאלה-שמאלה → גלגול ימינה.</li>
+                <li><strong>LR</strong>: הנתיב שמאלה-ימינה → גלגול שמאלה ואז ימינה.</li>
+                <li><strong>RR</strong>: הנתיב ימינה-ימינה → גלגול שמאלה.</li>
+                <li><strong>RL</strong>: הנתיב ימינה-שמאלה → גלגול ימינה ואז שמאלה.</li>
+            </ol>
+
+            <h3>מימוש גלגול שמאלה:</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">rotateLeft</span>(<span class="type">Node</span> p) {
+    <span class="type">Node</span> r = p.<span class="function">getRightSon</span>();
+    <span class="type">Node</span> rl = r.<span class="function">getLeftSon</span>();
+    r.<span class="function">setLeftSon</span>(p);
+    p.<span class="function">setRightSon</span>(rl);
+}</code></pre>
+
+            <div class="info-box">
+                <p>💡 <strong>שימו לב</strong>: עצי AVL לא נכללים בחומר הבסיסי של הקורס, אך חשובים מאוד לראיונות עבודה.</p>
+            </div>
+
+            <h2>תרגיל: בדיקה אם עץ הוא BST</h2>
+            <div class="intro-box">
+                <p><strong>שאלה</strong>: בהינתן עץ בינארי, איך בודקים ביעילות אם זהו עץ חיפוש בינארי?</p>
+            </div>
+
+            <h3>פתרון באמצעות Inorder:</h3>
+            <pre><code><span class="keyword">public boolean</span> <span class="function">isBST</span>(<span class="type">Node</span> root) {
+    <span class="type">ArrayList</span>&lt;<span class="type">Integer</span>&gt; list = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+    <span class="function">inorder</span>(root, list);
+    
+    <span class="comment">// בודקים אם הרשימה ממוינת בסדר עולה</span>
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; list.<span class="function">size</span>(); i++) {
+        <span class="keyword">if</span>(list.<span class="function">get</span>(i) &lt; list.<span class="function">get</span>(i - <span class="number">1</span>))
+            <span class="keyword">return false</span>;
+    }
+    <span class="keyword">return true</span>;
+}
+
+<span class="keyword">private void</span> <span class="function">inorder</span>(<span class="type">Node</span> root, <span class="type">ArrayList</span>&lt;<span class="type">Integer</span>&gt; list) {
+    <span class="keyword">if</span>(root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    <span class="function">inorder</span>(root.<span class="function">getLeftSon</span>(), list);
+    list.<span class="function">add</span>(root.<span class="function">getValue</span>());
+    <span class="function">inorder</span>(root.<span class="function">getRightSon</span>(), list);
+}</code></pre>
+
+            <h4>הסבר:</h4>
+            <ul>
+                <li>אוספים את כל ערכי העץ ב-Inorder לרשימה.</li>
+                <li>אם הרשימה ממוינת בסדר עולה → העץ הוא BST.</li>
+                <li>אחרת → העץ אינו BST.</li>
+            </ul>
+
+            <div class="key-points">
+                <h4>💡 יתרונות וחסרונות של BST</h4>
+                <p><strong>יתרונות:</strong></p>
+                <ul>
+                    <li>חיפוש יעיל ב-O(log n) בעץ מאוזן.</li>
+                    <li>סדר טבעי של הנתונים (Inorder → ממוין).</li>
+                    <li>הוספה ומחיקה דינמיות.</li>
+                </ul>
+                <p><strong>חסרונות:</strong></p>
+                <ul>
+                    <li>הגובה יכול להגיע ל-n במקרה הגרוע.</li>
+                    <li>דורש איזון תמידי לביצועים טובים (AVL, Red-Black).</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="11-bucket-sort.html">הבא: מיון דלי ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

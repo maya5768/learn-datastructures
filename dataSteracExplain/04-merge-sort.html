@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מיון מיזוג (Merge Sort)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔀 מיון מיזוג (Merge Sort)</h1>
+            <p class="subtitle">אלגוריתם "הפרד ומשול" בזמן O(n log n)</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זה מיון מיזוג?</h2>
+            <div class="intro-box">
+                <p><strong>מיון מיזוג</strong> הוא אלגוריתם מיון יעיל המבוסס על עיקרון <strong>"הפרד ומשול" (Divide and Conquer)</strong>. האלגוריתם מחלק את המערך לשני חצאים, ממיין כל חצי בנפרד רקורסיבית, ואז ממזג את שני החצאים הממוינים לרצף ממוין אחד.</p>
+            </div>
+
+            <h2>שלבי האלגוריתם</h2>
+
+            <div class="key-points">
+                <h4>📋 שלושה שלבים</h4>
+                <ol>
+                    <li><strong>Divide (חלוקה)</strong>: חלק את המערך לשני חצאים באמצע.</li>
+                    <li><strong>Conquer (פתרון)</strong>: מיין רקורסיבית כל חצי בנפרד.</li>
+                    <li><strong>Combine (מיזוג)</strong>: מזג את שני החצאים הממוינים לרצף ממוין אחד.</li>
+                </ol>
+            </div>
+
+            <h2>הדמיה חזותית</h2>
+            <div class="visualization">
+                <p><strong>מערך התחלתי:</strong></p>
+                <p>
+                    <span class="node-box">1</span>
+                    <span class="node-box">7</span>
+                    <span class="node-box">4</span>
+                    <span class="node-box">9</span>
+                    <span class="node-box">3</span>
+                    <span class="node-box">5</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box">2</span>
+                </p>
+                <p><strong>↓ חלוקה לחצאים ↓</strong></p>
+                <p>
+                    <span class="node-box">1</span>
+                    <span class="node-box">7</span>
+                    <span class="node-box">4</span>
+                    <span class="node-box">9</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="node-box">3</span>
+                    <span class="node-box">5</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box">2</span>
+                </p>
+                <p><strong>↓ חלוקה נוספת ↓</strong></p>
+                <p>
+                    <span class="node-box">1</span>
+                    <span class="node-box">7</span>
+                    &nbsp;&nbsp;
+                    <span class="node-box">4</span>
+                    <span class="node-box">9</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="node-box">3</span>
+                    <span class="node-box">5</span>
+                    &nbsp;&nbsp;
+                    <span class="node-box">8</span>
+                    <span class="node-box">2</span>
+                </p>
+                <p><strong>↓ חלוקה לאיברים בודדים ↓</strong></p>
+                <p>
+                    <span class="node-box">1</span>
+                    <span class="node-box">7</span>
+                    <span class="node-box">4</span>
+                    <span class="node-box">9</span>
+                    <span class="node-box">3</span>
+                    <span class="node-box">5</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box">2</span>
+                </p>
+                <p><strong>↑ מיזוג וחזרה למעלה ↑</strong></p>
+                <p>
+                    <span class="node-box">1,7</span>
+                    &nbsp;&nbsp;
+                    <span class="node-box">4,9</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="node-box">3,5</span>
+                    &nbsp;&nbsp;
+                    <span class="node-box">2,8</span>
+                </p>
+                <p>
+                    <span class="node-box">1,4,7,9</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="node-box">2,3,5,8</span>
+                </p>
+                <p>
+                    <span class="node-box">1</span>
+                    <span class="node-box">2</span>
+                    <span class="node-box">3</span>
+                    <span class="node-box">4</span>
+                    <span class="node-box">5</span>
+                    <span class="node-box">7</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box">9</span>
+                </p>
+            </div>
+
+            <h2>מימוש ב-Java</h2>
+
+            <h3>שיטת mergeSort הראשית:</h3>
+            <pre><code><span class="keyword">public static void</span> <span class="function">mergeSort</span>(<span class="type">int</span>[] a, <span class="type">int</span> left, <span class="type">int</span> right) {
+    <span class="keyword">if</span>(left &lt; right) {
+        <span class="type">int</span> mid = (left + right) / <span class="number">2</span>;
+        
+        <span class="comment">// מיון רקורסיבי של החצי השמאלי</span>
+        <span class="function">mergeSort</span>(a, left, mid);
+        
+        <span class="comment">// מיון רקורסיבי של החצי הימני</span>
+        <span class="function">mergeSort</span>(a, mid + <span class="number">1</span>, right);
+        
+        <span class="comment">// מיזוג שני החלקים הממוינים</span>
+        <span class="function">merge</span>(a, left, mid, right);
+    }
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li><code>if(left &lt; right)</code> – תנאי העצירה: אם יש יותר מאיבר אחד להמיין.</li>
+                <li><code>int mid = (left + right) / 2;</code> – חישוב נקודת האמצע.</li>
+                <li>שתי הקריאות הרקורסיביות ממיינות את שני החצאים.</li>
+                <li><code>merge</code> – מבצע את המיזוג הסופי בין שני החצאים הממוינים.</li>
+            </ul>
+
+            <h3>שיטת המיזוג (merge):</h3>
+            <pre><code><span class="keyword">public static void</span> <span class="function">merge</span>(<span class="type">int</span>[] a, <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right) {
+    <span class="type">int</span> n1 = mid - left + <span class="number">1</span>;   <span class="comment">// גודל החצי השמאלי</span>
+    <span class="type">int</span> n2 = right - mid;        <span class="comment">// גודל החצי הימני</span>
+    
+    <span class="comment">// יצירת מערכי עזר</span>
+    <span class="type">int</span>[] leftArr = <span class="keyword">new</span> <span class="type">int</span>[n1];
+    <span class="type">int</span>[] rightArr = <span class="keyword">new</span> <span class="type">int</span>[n2];
+    
+    <span class="comment">// העתקת הנתונים למערכי העזר</span>
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n1; i++)
+        leftArr[i] = a[left + i];
+    <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; n2; j++)
+        rightArr[j] = a[mid + <span class="number">1</span> + j];
+    
+    <span class="comment">// מיזוג שני המערכים בחזרה למערך המקורי</span>
+    <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, k = left;
+    <span class="keyword">while</span>(i &lt; n1 && j &lt; n2) {
+        <span class="keyword">if</span>(leftArr[i] &lt;= rightArr[j]) {
+            a[k] = leftArr[i];
+            i++;
+        } <span class="keyword">else</span> {
+            a[k] = rightArr[j];
+            j++;
+        }
+        k++;
+    }
+    
+    <span class="comment">// העתקת איברים שנותרו מהחצי השמאלי</span>
+    <span class="keyword">while</span>(i &lt; n1) {
+        a[k] = leftArr[i];
+        i++;
+        k++;
+    }
+    
+    <span class="comment">// העתקת איברים שנותרו מהחצי הימני</span>
+    <span class="keyword">while</span>(j &lt; n2) {
+        a[k] = rightArr[j];
+        j++;
+        k++;
+    }
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ol>
+                <li><strong>יצירת מערכי עזר</strong>: מעתיקים את שני החצאים למערכים זמניים.</li>
+                <li><strong>מיזוג</strong>: עוברים על שני המערכים במקביל, ובכל פעם לוקחים את הקטן מביניהם.</li>
+                <li><strong>העתקת שאריות</strong>: אחרי שאחד המערכים הסתיים, מעתיקים את שארית המערך השני.</li>
+            </ol>
+
+            <h2>ניתוח זמן ריצה</h2>
+
+            <div class="intro-box">
+                <h3>נוסחת הנסיגה:</h3>
+                <pre><code>T(n) = 2T(n/2) + n</code></pre>
+                <ul>
+                    <li><code>2T(n/2)</code> – שתי הקריאות הרקורסיביות על החצאים.</li>
+                    <li><code>+ n</code> – הפעולה של merge שעוברת על כל n האיברים.</li>
+                </ul>
+            </div>
+
+            <h3>פתרון באמצעות עץ רקורסיה:</h3>
+            <div class="visualization">
+                <p>רמה 0: n (1 קריאה, גודל n)<br>
+                רמה 1: n/2 + n/2 = n (2 קריאות, גודל n/2 כל אחת)<br>
+                רמה 2: 4·(n/4) = n (4 קריאות, גודל n/4 כל אחת)<br>
+                ...<br>
+                רמה k: 2^k · (n/2^k) = n<br>
+                גובה העץ: log₂(n)</p>
+                <p><strong>סכום כולל</strong>: n · log(n) = <code>O(n log n)</code></p>
+            </div>
+
+            <h3>פתרון באמצעות משפט האב:</h3>
+            <ul>
+                <li><code>a = 2, b = 2, f(n) = n</code></li>
+                <li><code>log_b(a) = log_2(2) = 1</code></li>
+                <li><code>f(n) = Θ(n^1) = Θ(n)</code></li>
+                <li>זה <strong>מקרה 2</strong> של משפט האב</li>
+                <li>לכן: <code>T(n) = Θ(n log n)</code></li>
+            </ul>
+
+            <h2>טבלת זמני ריצה</h2>
+            <table>
+                <tr>
+                    <th>מקרה</th>
+                    <th>זמן ריצה</th>
+                </tr>
+                <tr>
+                    <td>מקרה טוב (Best Case)</td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                </tr>
+                <tr>
+                    <td>מקרה ממוצע (Average Case)</td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                </tr>
+                <tr>
+                    <td>מקרה גרוע (Worst Case)</td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                </tr>
+                <tr>
+                    <td>זיכרון נוסף</td>
+                    <td><span class="complexity average">O(n)</span></td>
+                </tr>
+            </table>
+
+            <h2>יתרונות וחסרונות</h2>
+
+            <div class="success-box">
+                <h4>✅ יתרונות</h4>
+                <ul>
+                    <li><strong>זמן ריצה עקבי</strong>: תמיד O(n log n), גם במקרה הגרוע.</li>
+                    <li><strong>יציבות (Stable)</strong>: שומר על הסדר היחסי של איברים שווים.</li>
+                    <li><strong>יעיל לרשימות מקושרות</strong>: אפשר למזג מבלי להעתיק.</li>
+                    <li><strong>מתאים לקבצים גדולים</strong>: ניתן להשתמש ב-External Merge Sort.</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ חסרונות</h4>
+                <ul>
+                    <li><strong>זיכרון נוסף</strong>: דורש O(n) זיכרון נוסף למערכי העזר.</li>
+                    <li><strong>לא in-place</strong>: לא ממיין במקום (בניגוד למיון מהיר).</li>
+                </ul>
+            </div>
+
+            <h2>תרגיל: מיון מיזוג עם חלוקה לשלושה חלקים</h2>
+            <p>אם נחלק את המערך לשלושה חלקים במקום שניים, נוסחת הנסיגה תהיה:</p>
+            <pre><code>T(n) = 3T(n/3) + n</code></pre>
+
+            <h3>פתרון לפי משפט האב:</h3>
+            <ul>
+                <li><code>a = 3, b = 3, f(n) = n</code></li>
+                <li><code>log_b(a) = log_3(3) = 1</code></li>
+                <li><code>f(n) = Θ(n)</code></li>
+                <li>מקרה 2 → <code>T(n) = Θ(n log n)</code></li>
+            </ul>
+
+            <div class="info-box">
+                <p>💡 <strong>מסקנה</strong>: חלוקה לשלושה חלקים לא משפרת את סדר הגודל האסימפטוטי – עדיין O(n log n).</p>
+            </div>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="05-quick-sort.html">הבא: מיון מהיר ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

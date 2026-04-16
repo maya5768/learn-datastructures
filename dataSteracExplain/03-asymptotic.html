@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חסמים אסימפטוטיים ומשפט האב</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 חסמים אסימפטוטיים ומשפט האב</h1>
+            <p class="subtitle">O, Ω, Θ ופתרון נוסחאות נסיגה</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה הם חסמים אסימפטוטיים?</h2>
+            <div class="intro-box">
+                <p>כאשר אנו מנתחים אלגוריתמים, אנחנו רוצים לדעת איך זמן הריצה גדל ככל שגודל הקלט גדל. החסמים האסימפטוטיים מאפשרים לנו <strong>לחסום את הגידול של פונקציה מכמה כיוונים</strong>: מלמעלה, מלמטה, או משניהם.</p>
+                <p>שלושת החסמים העיקריים: <code>O</code>, <code>Θ</code>, <code>Ω</code>.</p>
+            </div>
+
+            <h2>חסם עליון – Big O</h2>
+            <h3>הגדרה פורמלית:</h3>
+            <div class="info-box">
+                <p>עבור שתי פונקציות f(n) ו-g(n), נאמר ש-<strong>f(n) = O(g(n))</strong> אם קיימים קבועים חיוביים <code>c</code> ו-<code>n₀</code> כך שלכל <code>n ≥ n₀</code> מתקיים:</p>
+                <pre><code>f(n) ≤ c · g(n)</code></pre>
+                <p>במילים אחרות, g(n) "חוסמת" את f(n) מלמעלה עבור ערכים גדולים מספיק של n.</p>
+            </div>
+
+            <h3>דוגמה:</h3>
+            <p>האם <code>f(n) = 2n + 3 = O(n²)</code>?</p>
+            <p>צריך למצוא קבועים c ו-n₀ שיקיימו: <code>2n + 3 ≤ cn²</code></p>
+            <p>נבחר <code>c = 2</code>. האם קיים n₀ שממנו מתקיים <code>2n + 3 ≤ 2n²</code>?<br>
+            כן, נבחר למשל <code>n₀ = 5</code>.</p>
+            <div class="success-box">
+                <p>✅ לכן <code>2n + 3 = O(n²)</code></p>
+            </div>
+
+            <h2>חסם תחתון – Big Ω</h2>
+            <h3>הגדרה פורמלית:</h3>
+            <div class="info-box">
+                <p>עבור שתי פונקציות f(n) ו-g(n), נאמר ש-<strong>f(n) = Ω(g(n))</strong> אם קיימים קבועים חיוביים <code>c</code> ו-<code>n₀</code> כך שלכל <code>n ≥ n₀</code> מתקיים:</p>
+                <pre><code>0 ≤ c · g(n) ≤ f(n)</code></pre>
+                <p>כלומר, f(n) <strong>אינה קטנה</strong> מ-g(n) כפול קבוע, עבור n גדול מספיק.</p>
+            </div>
+
+            <h3>דוגמה:</h3>
+            <p>האם <code>f(n) = 5n = Ω(10n)</code>?</p>
+            <p>צריך למצוא c ש-<code>c · 10n ≤ 5n</code>, כלומר <code>2c ≤ 1</code>.</p>
+            <p>נבחר <code>c = 0.5</code> ואי השוויון יתקיים לכל n.</p>
+            <div class="success-box">
+                <p>✅ לכן <code>5n = Ω(10n)</code></p>
+            </div>
+
+            <h2>חסם הדוק – Big Θ</h2>
+            <h3>הגדרה פורמלית:</h3>
+            <div class="info-box">
+                <p>עבור שתי פונקציות f(n) ו-g(n), נאמר ש-<strong>f(n) = Θ(g(n))</strong> אם קיימים שלושה קבועים חיוביים <code>c₁, c₂, n₀</code> כך שלכל <code>n ≥ n₀</code> מתקיים:</p>
+                <pre><code>0 ≤ c₁ · g(n) ≤ f(n) ≤ c₂ · g(n)</code></pre>
+                <p>כלומר, g(n) היא <strong>חסם הדוק</strong> עבור f(n) – גם מלמעלה וגם מלמטה.</p>
+            </div>
+
+            <h3>דוגמה:</h3>
+            <p>הוכיחו ש-<code>5n + 3 = Θ(n)</code></p>
+            <p>נצטרך למצוא שני קבועים שמקיימים:</p>
+            <pre><code>c₁ · n ≤ 5n + 3 ≤ c₂ · n</code></pre>
+            <p>אפשר לבחור <code>c₁ = 5, c₂ = 8, n₀ = 1</code>, וכל אי השוויונות מתקיימים.</p>
+
+            <h2>כללי חיבור וכפל חסמים</h2>
+            <h3>חיבור חסמים:</h3>
+            <pre><code>O(f(n)) + O(g(n)) = O(max(f(n), g(n)))
+Ω(f(n)) + Ω(g(n)) = Ω(max(f(n), g(n)))
+Θ(f(n)) + Θ(g(n)) = Θ(max(f(n), g(n)))</code></pre>
+
+            <h3>כפל חסמים:</h3>
+            <pre><code>O(f(n)) · O(g(n)) = O(f(n) · g(n))
+Ω(f(n)) · Ω(g(n)) = Ω(f(n) · g(n))
+Θ(f(n)) · Θ(g(n)) = Θ(f(n) · g(n))</code></pre>
+
+            <h2>משפט האב (Master Theorem)</h2>
+
+            <div class="intro-box">
+                <p>משפט האב הוא כלי חזק לפתרון נוסחאות נסיגה מהצורה:</p>
+                <pre><code>T(n) = a · T(n/b) + f(n)</code></pre>
+                <p>כאשר <code>a ≥ 1, b &gt; 1</code>, ו-<code>f(n)</code> היא פונקציה חיובית.</p>
+            </div>
+
+            <h3>שלושת המקרים:</h3>
+
+            <div class="info-box">
+                <h4>מקרה 1: f(n) קטנה מ-n^log_b(a)</h4>
+                <p>אם קיים <code>ε &gt; 0</code> כך ש-<code>f(n) = O(n^(log_b(a) - ε))</code>, אזי:</p>
+                <pre><code>T(n) = Θ(n^log_b(a))</code></pre>
+            </div>
+
+            <div class="info-box">
+                <h4>מקרה 2: f(n) שווה ל-n^log_b(a)</h4>
+                <p>אם <code>f(n) = Θ(n^log_b(a))</code>, אזי:</p>
+                <pre><code>T(n) = Θ(n^log_b(a) · log n)</code></pre>
+            </div>
+
+            <div class="info-box">
+                <h4>מקרה 3: f(n) גדולה מ-n^log_b(a)</h4>
+                <p>אם קיים <code>ε &gt; 0</code> כך ש-<code>f(n) = Ω(n^(log_b(a) + ε))</code>, אזי:</p>
+                <pre><code>T(n) = Θ(f(n))</code></pre>
+            </div>
+
+            <h2>דוגמאות לשימוש במשפט האב</h2>
+
+            <h3>דוגמה 1: T(n) = 8T(n/2) + n²</h3>
+            <ul>
+                <li><code>a = 8, b = 2, f(n) = n²</code></li>
+                <li><code>log_b(a) = log_2(8) = 3</code></li>
+                <li>האם <code>f(n) = O(n^(3-ε))</code>? נבחר <code>ε = 1</code>: <code>f(n) = O(n²)</code> ✅</li>
+                <li><strong>מקרה 1</strong> מתקיים, לכן: <code>T(n) = Θ(n³)</code></li>
+            </ul>
+
+            <h3>דוגמה 2: T(n) = 2T(n/2) + n (Merge Sort!)</h3>
+            <ul>
+                <li><code>a = 2, b = 2, f(n) = n</code></li>
+                <li><code>log_b(a) = log_2(2) = 1</code></li>
+                <li>האם <code>f(n) = Θ(n^1) = Θ(n)</code>? כן ✅</li>
+                <li><strong>מקרה 2</strong> מתקיים, לכן: <code>T(n) = Θ(n log n)</code></li>
+            </ul>
+
+            <h3>דוגמה 3: T(n) = 2T(n/2) + n²</h3>
+            <ul>
+                <li><code>a = 2, b = 2, f(n) = n²</code></li>
+                <li><code>log_b(a) = log_2(2) = 1</code></li>
+                <li>האם <code>f(n) = Ω(n^(1+ε))</code>? נבחר <code>ε = 1</code>: <code>f(n) = Ω(n²)</code> ✅</li>
+                <li><strong>מקרה 3</strong> מתקיים, לכן: <code>T(n) = Θ(n²)</code></li>
+            </ul>
+
+            <h2>הוכחות נוספות חשובות</h2>
+
+            <h3>טרנזיטיביות של O:</h3>
+            <p>אם <code>f(n) = O(g(n))</code> וגם <code>g(n) = O(h(n))</code> אז <code>f(n) = O(h(n))</code>.</p>
+            <p><strong>הוכחה</strong>: מהנתון קיימים c₁, c₂ כך:</p>
+            <pre><code>f(n) ≤ c₁·g(n) ≤ c₁·c₂·h(n)</code></pre>
+            <p>לכן קיים <code>c₃ = c₁·c₂</code> שמקיים את אי השוויון.</p>
+
+            <h3>תכונת הלוג:</h3>
+            <p>אם <code>f(n) = O(g(n))</code> אז <code>log(f(n)) = O(log(g(n)))</code>.</p>
+
+            <h3>דוגמה להפרכה:</h3>
+            <p>האם נכון שאם <code>f(n) = O(g(n))</code> אז <code>g(n) = O(f(n))</code>?</p>
+            <p><strong>לא נכון</strong>! דוגמה נגדית: <code>f(n) = n, g(n) = n²</code>.<br>
+            <code>n = O(n²)</code> (נכון), אך <code>n² ≠ O(n)</code>.</p>
+
+            <div class="key-points">
+                <h4>💡 טבלת סדרי גודל נפוצים (מהקטן לגדול)</h4>
+                <table>
+                    <tr>
+                        <th>סדר גודל</th>
+                        <th>שם</th>
+                        <th>דוגמה</th>
+                    </tr>
+                    <tr><td><span class="complexity excellent">O(1)</span></td><td>קבוע</td><td>גישה לתא במערך</td></tr>
+                    <tr><td><span class="complexity excellent">O(log n)</span></td><td>לוגריתמי</td><td>חיפוש בינארי</td></tr>
+                    <tr><td><span class="complexity good">O(n)</span></td><td>ליניארי</td><td>סריקת מערך</td></tr>
+                    <tr><td><span class="complexity good">O(n log n)</span></td><td>לינאריתמי</td><td>מיון מיזוג, מיון מהיר</td></tr>
+                    <tr><td><span class="complexity average">O(n²)</span></td><td>ריבועי</td><td>מיון בועות, מיון בחירה</td></tr>
+                    <tr><td><span class="complexity bad">O(2^n)</span></td><td>מעריכי</td><td>פתרון בעיית תא-רסטיגייני</td></tr>
+                    <tr><td><span class="complexity worst">O(n!)</span></td><td>עצרתי</td><td>חישוב כל הפרמוטציות</td></tr>
+                </table>
+            </div>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="04-merge-sort.html">הבא: מיון מיזוג ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

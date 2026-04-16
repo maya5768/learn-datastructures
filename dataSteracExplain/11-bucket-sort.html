@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מיון דלי (Bucket Sort)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🪣 מיון דלי (Bucket Sort)</h1>
+            <p class="subtitle">אלגוריתם מיון לינארי לנתונים מפולגים באופן אחיד</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זה מיון דלי?</h2>
+            <div class="intro-box">
+                <p><strong>מיון דלי (Bucket Sort)</strong> הוא אלגוריתם מיון שעובד על ידי חלוקת האיברים ל<strong>"דליים" (Buckets)</strong> לפי ערכם, מיון כל דלי בנפרד, ואז שרשור הדליים הממוינים בסדר. האלגוריתם יעיל במיוחד כאשר הנתונים מתפלגים באופן <strong>אחיד (Uniform)</strong> בטווח ידוע.</p>
+                <p>בניגוד לאלגוריתמים כמו Merge Sort או Quick Sort שמסתמכים על <strong>השוואות</strong>, מיון דלי מסתמך על <strong>התפלגות הערכים</strong>, ולכן הוא יכול להגיע לזמן ריצה <span class="complexity excellent">O(n)</span> במקרים טובים.</p>
+            </div>
+
+            <h2>שלבי האלגוריתם</h2>
+            <div class="key-points">
+                <h4>📋 שלושה שלבים עיקריים</h4>
+                <ol>
+                    <li><strong>יצירת דליים</strong>: יוצרים n דליים ריקים (רשימות מקושרות).</li>
+                    <li><strong>פיזור לדליים</strong>: עוברים על המערך ומכניסים כל איבר לדלי המתאים לפי ערכו.</li>
+                    <li><strong>מיון ואיחוד</strong>: ממיינים כל דלי בנפרד, ואז משרשרים את כל הדליים.</li>
+                </ol>
+            </div>
+
+            <h2>דוגמה מוחשית</h2>
+            <p>נרצה למיין את המערך הבא המכיל מספרים עשרוניים בטווח [0, 1):</p>
+            <div class="visualization">
+                <p><strong>קלט:</strong> [0.42, 0.32, 0.23, 0.52, 0.25, 0.47, 0.51, 0.12, 0.26, 0.78, 0.66, 0.37, 0.58]</p>
+            </div>
+
+            <h3>שלב 1: חלוקה לדליים (10 דליים, אחד לכל ספרה אחרי הנקודה)</h3>
+            <div class="visualization">
+                <p>דלי 0: []<br>
+                דלי 1: [0.12]<br>
+                דלי 2: [0.23, 0.25, 0.26]<br>
+                דלי 3: [0.32, 0.37]<br>
+                דלי 4: [0.42, 0.47]<br>
+                דלי 5: [0.52, 0.51, 0.58]<br>
+                דלי 6: [0.66]<br>
+                דלי 7: [0.78]<br>
+                דלי 8: []<br>
+                דלי 9: []</p>
+            </div>
+
+            <h3>שלב 2: מיון כל דלי בנפרד</h3>
+            <div class="visualization">
+                <p>דלי 2: [0.23, 0.25, 0.26] ✅ כבר ממוין<br>
+                דלי 3: [0.32, 0.37] ✅ כבר ממוין<br>
+                דלי 4: [0.42, 0.47] ✅ כבר ממוין<br>
+                דלי 5: [0.51, 0.52, 0.58] ← <strong>מוין!</strong> (מ-[0.52, 0.51, 0.58])<br>
+                ...</p>
+            </div>
+
+            <h3>שלב 3: שרשור הדליים</h3>
+            <div class="visualization">
+                <p><strong>פלט:</strong> [0.12, 0.23, 0.25, 0.26, 0.32, 0.37, 0.42, 0.47, 0.51, 0.52, 0.58, 0.66, 0.78] ✅</p>
+            </div>
+
+            <h2>מימוש ב-Java</h2>
+
+            <h3>מחלקת DoubleNode (צומת לרשימה של double):</h3>
+            <pre><code><span class="keyword">public class</span> <span class="type">DoubleNode</span> {
+    <span class="keyword">private double</span> value;
+    <span class="keyword">private</span> <span class="type">DoubleNode</span> next;
+    
+    <span class="keyword">public</span> <span class="function">DoubleNode</span>(<span class="type">double</span> val, <span class="type">DoubleNode</span> n) {
+        value = val;
+        next = n;
+    }
+    
+    <span class="keyword">public double</span> <span class="function">getValue</span>() { <span class="keyword">return</span> value; }
+    <span class="keyword">public</span> <span class="type">DoubleNode</span> <span class="function">getNext</span>() { <span class="keyword">return</span> next; }
+    <span class="keyword">public void</span> <span class="function">setNext</span>(<span class="type">DoubleNode</span> n) { next = n; }
+}</code></pre>
+
+            <h3>מחלקת DoubleList (רשימה של double):</h3>
+            <pre><code><span class="keyword">public class</span> <span class="type">DoubleList</span> {
+    <span class="keyword">private</span> <span class="type">DoubleNode</span> head;
+    
+    <span class="keyword">public</span> <span class="function">DoubleList</span>() {
+        head = <span class="keyword">null</span>;
+    }
+    
+    <span class="keyword">public</span> <span class="type">DoubleNode</span> <span class="function">getHead</span>() {
+        <span class="keyword">return</span> head;
+    }
+    
+    <span class="comment">// הוספת ערך לרשימה במקום הנכון (מוין)</span>
+    <span class="keyword">public void</span> <span class="function">addToList</span>(<span class="type">double</span> x) {
+        <span class="keyword">if</span>(head == <span class="keyword">null</span> || head.<span class="function">getValue</span>() &gt;= x) {
+            <span class="comment">// הוספה בראש</span>
+            head = <span class="keyword">new</span> <span class="function">DoubleNode</span>(x, head);
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// חיפוש המקום הנכון</span>
+        <span class="type">DoubleNode</span> p = head;
+        <span class="keyword">while</span>(p.<span class="function">getNext</span>() != <span class="keyword">null</span> && p.<span class="function">getNext</span>().<span class="function">getValue</span>() &lt; x)
+            p = p.<span class="function">getNext</span>();
+        
+        <span class="comment">// הכנסה באמצע/בסוף</span>
+        p.<span class="function">setNext</span>(<span class="keyword">new</span> <span class="function">DoubleNode</span>(x, p.<span class="function">getNext</span>()));
+    }
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li><strong>addToList</strong> – מוסיפה ערך לרשימה תוך שמירה על סדר עולה.</li>
+                <li>אם הרשימה ריקה או שהערך החדש קטן מהראש – מוסיפים בהתחלה.</li>
+                <li>אחרת, מחפשים את המקום הנכון ומכניסים שם.</li>
+                <li><strong>יתרון</strong>: הרשימה תמיד ממוינת → אין צורך במיון נוסף!</li>
+            </ul>
+
+            <h3>מימוש Bucket Sort:</h3>
+            <pre><code><span class="keyword">public static</span> <span class="type">DoubleList</span>[] <span class="function">bucketSort</span>(<span class="type">double</span>[] a) {
+    <span class="type">int</span> n = a.length;
+    <span class="type">DoubleList</span>[] buckets = <span class="keyword">new</span> <span class="type">DoubleList</span>[<span class="number">10</span>];
+    
+    <span class="comment">// שלב 1: יצירת הדליים</span>
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)
+        buckets[i] = <span class="keyword">new</span> <span class="function">DoubleList</span>();
+    
+    <span class="comment">// שלב 2: הכנסת כל איבר לדלי המתאים</span>
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+        <span class="type">int</span> index = (<span class="type">int</span>)(a[i] * <span class="number">10</span>);  <span class="comment">// חישוב אינדקס הדלי</span>
+        buckets[index].<span class="function">addToList</span>(a[i]);
+    }
+    
+    <span class="keyword">return</span> buckets;
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ol>
+                <li><strong>יצירת 10 דליים</strong>: כל דלי הוא רשימה מקושרת ריקה.</li>
+                <li><strong>חישוב אינדקס הדלי</strong>: עבור ערך בטווח [0, 1), נכפול ב-10 ונעגל כלפי מטה.
+                    <ul>
+                        <li>0.23 × 10 = 2.3 → אינדקס 2 (דלי 2)</li>
+                        <li>0.52 × 10 = 5.2 → אינדקס 5 (דלי 5)</li>
+                    </ul>
+                </li>
+                <li><strong>הכנסה ממוינת</strong>: שימוש ב-<code>addToList</code> שומר על הסדר בתוך כל דלי.</li>
+                <li>בסוף, די לקרוא את הדליים בסדר 0→9 לקבלת המערך הממוין.</li>
+            </ol>
+
+            <h3>שרשור הדליים למערך סופי:</h3>
+            <pre><code><span class="keyword">public static double</span>[] <span class="function">collect</span>(<span class="type">DoubleList</span>[] buckets, <span class="type">int</span> n) {
+    <span class="type">double</span>[] result = <span class="keyword">new double</span>[n];
+    <span class="type">int</span> idx = <span class="number">0</span>;
+    
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; buckets.length; i++) {
+        <span class="type">DoubleNode</span> p = buckets[i].<span class="function">getHead</span>();
+        <span class="keyword">while</span>(p != <span class="keyword">null</span>) {
+            result[idx++] = p.<span class="function">getValue</span>();
+            p = p.<span class="function">getNext</span>();
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}</code></pre>
+
+            <h2>ניתוח זמן ריצה</h2>
+
+            <h3>מקרה ממוצע (התפלגות אחידה):</h3>
+            <div class="success-box">
+                <p>כאשר הנתונים מתפלגים באופן <strong>אחיד</strong> בטווח, צפוי שבכל דלי יהיו בערך n/k איברים (כאשר k הוא מספר הדליים).</p>
+                <ul>
+                    <li>זמן הפיזור: <code>O(n)</code></li>
+                    <li>זמן המיון של כל דלי: <code>O((n/k)²)</code> (מיון הכנסה בתוך רשימה)</li>
+                    <li>סה"כ לכל הדליים: <code>k · O((n/k)²) = O(n²/k)</code></li>
+                    <li>זמן השרשור: <code>O(n + k)</code></li>
+                </ul>
+                <p>אם k = n, זמן הריצה הכולל: <span class="complexity excellent">O(n)</span></p>
+            </div>
+
+            <h3>מקרה גרוע:</h3>
+            <div class="warning-box">
+                <p>כאשר <strong>כל האיברים נופלים לאותו דלי</strong>, מיון הדלי לוקח זמן של מיון רגיל: <span class="complexity average">O(n²)</span></p>
+                <p>דוגמה: [0.91, 0.92, 0.93, 0.94, 0.95] – כולם נופלים לדלי 9.</p>
+            </div>
+
+            <h2>טבלת זמני ריצה</h2>
+            <table>
+                <tr>
+                    <th>מקרה</th>
+                    <th>זמן ריצה</th>
+                </tr>
+                <tr>
+                    <td>מקרה טוב</td>
+                    <td><span class="complexity excellent">O(n + k)</span></td>
+                </tr>
+                <tr>
+                    <td>מקרה ממוצע</td>
+                    <td><span class="complexity excellent">O(n + k)</span></td>
+                </tr>
+                <tr>
+                    <td>מקרה גרוע</td>
+                    <td><span class="complexity average">O(n²)</span></td>
+                </tr>
+                <tr>
+                    <td>זיכרון נוסף</td>
+                    <td><span class="complexity average">O(n + k)</span></td>
+                </tr>
+            </table>
+            <p>כאשר n = מספר האיברים, k = מספר הדליים.</p>
+
+            <h2>יתרונות וחסרונות</h2>
+
+            <div class="success-box">
+                <h4>✅ יתרונות</h4>
+                <ul>
+                    <li><strong>מהיר במקרה ממוצע</strong>: O(n) כאשר הנתונים מתפלגים באופן אחיד.</li>
+                    <li><strong>פשוט להבנה וליישום</strong> יחסית לאלגוריתמים אחרים.</li>
+                    <li><strong>יציב</strong> (Stable) – שומר על הסדר היחסי של איברים שווים.</li>
+                    <li><strong>מתאים לנתונים מפולגים</strong> – טוב למשל למספרים ממשיים מפולגים אחיד.</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ חסרונות</h4>
+                <ul>
+                    <li><strong>דורש הנחה על התפלגות הנתונים</strong>: אם הנתונים מקובצים, ביצועים פחות טובים.</li>
+                    <li><strong>זיכרון נוסף</strong>: דורש מקום לדליים.</li>
+                    <li><strong>לא מתאים לערכים שליליים</strong> או שטווח לא ידוע מראש (בלי התאמות).</li>
+                    <li><strong>תלוי בבחירת מספר הדליים</strong>: אם יש מעט מדי, ביצועים גרועים.</li>
+                </ul>
+            </div>
+
+            <h2>השוואה למיוני השוואה</h2>
+            <table>
+                <tr>
+                    <th>אלגוריתם</th>
+                    <th>זמן ממוצע</th>
+                    <th>זמן גרוע</th>
+                    <th>מבוסס על</th>
+                </tr>
+                <tr>
+                    <td>מיון דלי</td>
+                    <td><span class="complexity excellent">O(n)</span></td>
+                    <td><span class="complexity average">O(n²)</span></td>
+                    <td>התפלגות</td>
+                </tr>
+                <tr>
+                    <td>מיון מיזוג</td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                    <td>השוואות</td>
+                </tr>
+                <tr>
+                    <td>מיון מהיר</td>
+                    <td><span class="complexity good">O(n log n)</span></td>
+                    <td><span class="complexity average">O(n²)</span></td>
+                    <td>השוואות</td>
+                </tr>
+            </table>
+
+            <div class="key-points">
+                <h4>💡 מתי להשתמש במיון דלי?</h4>
+                <ul>
+                    <li>כשהנתונים <strong>מתפלגים באופן אחיד</strong> בטווח ידוע.</li>
+                    <li>כשצריך מיון מהיר ו<strong>אין מגבלת זיכרון</strong>.</li>
+                    <li>כשהנתונים הם <strong>מספרים ממשיים בטווח [0, 1)</strong> או דומה.</li>
+                    <li>כש<strong>מהירות חשובה יותר מחיסכון בזיכרון</strong>.</li>
+                </ul>
+            </div>
+
+            <h2>סיכום הקורס 🎓</h2>
+            <div class="success-box">
+                <h4>✨ סיימנו את סיכומי הקורס!</h4>
+                <p>עברנו על כל הנושאים המרכזיים:</p>
+                <ul>
+                    <li>✅ מבוא למבני נתונים ואלגוריתמים</li>
+                    <li>✅ רקורסיה ונוסחאות נסיגה</li>
+                    <li>✅ חסמים אסימפטוטיים ומשפט האב</li>
+                    <li>✅ מיון מיזוג, מיון מהיר ו-Quick Select</li>
+                    <li>✅ רשימות מקושרות</li>
+                    <li>✅ מחסניות ותורים</li>
+                    <li>✅ עצים בינאריים (BST)</li>
+                    <li>✅ מיון דלי</li>
+                </ul>
+                <p>בהצלחה במבחן! 🍀</p>
+            </div>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a></p>
+        </footer>
+    </div>
+</body>
+</html>

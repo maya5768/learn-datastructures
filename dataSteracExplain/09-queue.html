@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תור (Queue)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚶 תור (Queue)</h1>
+            <p class="subtitle">FIFO – הכנס ראשון, הוצא ראשון</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זה תור?</h2>
+            <div class="intro-box">
+                <p><strong>תור (Queue)</strong> הוא מבנה נתונים שבו ההכנסה מתבצעת בקצה אחד (ה<strong>זנב</strong>) וההוצאה בקצה השני (ה<strong>ראש</strong>), בסדר <strong>FIFO (First In, First Out)</strong>. כלומר, האיבר הראשון שנכנס הוא האיבר הראשון שיוצא.</p>
+                <p>התור מדמה תור אמיתי – כמו בסופרמרקט או בתחנה: הראשון בתור הוא הראשון שמקבל שירות.</p>
+            </div>
+
+            <h2>הפעולות הבסיסיות</h2>
+            <table>
+                <tr>
+                    <th>פעולה</th>
+                    <th>חתימה</th>
+                    <th>תיאור</th>
+                </tr>
+                <tr>
+                    <td><strong>enqueue</strong></td>
+                    <td><code>void enqueue(int x)</code></td>
+                    <td>מוסיף את x לסוף התור (זנב)</td>
+                </tr>
+                <tr>
+                    <td><strong>dequeue</strong></td>
+                    <td><code>int dequeue()</code></td>
+                    <td>מוציא ומחזיר את האיבר מראש התור</td>
+                </tr>
+                <tr>
+                    <td><strong>isEmpty</strong></td>
+                    <td><code>boolean isEmpty()</code></td>
+                    <td>מחזיר true אם התור ריק</td>
+                </tr>
+            </table>
+
+            <h2>דוגמה להפעלת תור</h2>
+            <p>נכניס לתור את האיברים 2, 5, 8, 4 (מהראשון לאחרון):</p>
+
+            <div class="visualization">
+                <p><strong>התור:</strong></p>
+                <p>
+                    ← <span class="node-box" style="background: #4caf50; color: white;">2</span>
+                    <span class="node-box">5</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box" style="background: #ffeb3b;">4</span> ←
+                </p>
+                <p>ראש התור (יצא ראשון) ——————————— סוף התור (נכנס אחרון)</p>
+                <p><strong>אם נבצע dequeue()</strong> – האיבר שיצא הוא <strong>2</strong> (הראשון שנכנס).</p>
+            </div>
+
+            <h2>מימוש תור באמצעות רשימה מקושרת</h2>
+
+            <div class="intro-box">
+                <p>נשתמש בשני מצביעים:</p>
+                <ul>
+                    <li><strong>front</strong> – מצביע לראש התור (מקום היציאה).</li>
+                    <li><strong>back</strong> – מצביע לסוף התור (מקום הכניסה).</li>
+                </ul>
+            </div>
+
+            <h3>הדמיה חזותית:</h3>
+            <div class="visualization">
+                <p><strong>התור ריק:</strong> front = back = null</p>
+                <p><strong>אחרי enqueue(3):</strong></p>
+                <p>front → <span class="node-box">3</span> ← back</p>
+                <p><strong>אחרי enqueue(6):</strong></p>
+                <p>front → <span class="node-box">3</span>→<span class="node-box">6</span> ← back</p>
+                <p><strong>אחרי enqueue(4):</strong></p>
+                <p>front → <span class="node-box">3</span>→<span class="node-box">6</span>→<span class="node-box">4</span> ← back</p>
+                <p><strong>אחרי dequeue() (מחזיר 3):</strong></p>
+                <p>front → <span class="node-box">6</span>→<span class="node-box">4</span> ← back</p>
+            </div>
+
+            <h3>מימוש ב-Java:</h3>
+            <pre><code><span class="keyword">public class</span> <span class="type">Queue</span> {
+    <span class="keyword">private</span> <span class="type">IntNode</span> front;
+    <span class="keyword">private</span> <span class="type">IntNode</span> back;
+    
+    <span class="comment">// יצירת תור חדש</span>
+    <span class="keyword">public</span> <span class="function">Queue</span>() {
+        front = back = <span class="keyword">null</span>;
+    }
+    
+    <span class="comment">// בדיקה אם התור ריק</span>
+    <span class="keyword">public boolean</span> <span class="function">isEmpty</span>() {
+        <span class="keyword">return</span> front == <span class="keyword">null</span>;
+    }
+    
+    <span class="comment">// הוספת איבר לסוף התור</span>
+    <span class="keyword">public void</span> <span class="function">enqueue</span>(<span class="type">int</span> x) {
+        <span class="type">IntNode</span> temp = <span class="keyword">new</span> <span class="function">IntNode</span>(x, <span class="keyword">null</span>);
+        
+        <span class="keyword">if</span>(back == <span class="keyword">null</span>) {
+            <span class="comment">// תור ריק – האיבר הוא גם הראש וגם הזנב</span>
+            front = back = temp;
+        } <span class="keyword">else</span> {
+            back.<span class="function">setNext</span>(temp);
+            back = back.<span class="function">getNext</span>();
+        }
+    }
+    
+    <span class="comment">// הוצאת איבר מראש התור</span>
+    <span class="keyword">public int</span> <span class="function">dequeue</span>() {
+        <span class="keyword">if</span>(front == <span class="keyword">null</span>)
+            <span class="keyword">throw new</span> <span class="function">RuntimeException</span>(<span class="string">"Underflow error"</span>);
+        
+        <span class="type">int</span> x = front.<span class="function">getValue</span>();
+        front = front.<span class="function">getNext</span>();
+        
+        <span class="comment">// אם הוצאנו את האיבר האחרון, נאפס גם את back</span>
+        <span class="keyword">if</span>(front == <span class="keyword">null</span>)
+            back = <span class="keyword">null</span>;
+        
+        <span class="keyword">return</span> x;
+    }
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li><strong>enqueue</strong>: יוצרים צומת חדש. אם התור ריק, front ו-back שניהם מצביעים עליו. אחרת, מחברים לסוף הרשימה ומעדכנים את back.</li>
+                <li><strong>dequeue</strong>: שומרים את הערך של front, מקדמים את front לצומת הבא. אם התור התרוקן – מאפסים גם את back.</li>
+            </ul>
+
+            <h2>מימוש תור באמצעות מערך</h2>
+
+            <div class="warning-box">
+                <h4>⚠️ הבעיה במימוש תמים</h4>
+                <p>אם נשתמש במערך רגיל ונעדכן משתנה <code>back</code> בלבד, כל פעולת <code>dequeue</code> תחייב <strong>הזזה של כל האיברים</strong> תא אחד אחורה – פעולה של O(n)!</p>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ הפתרון: מערך מעגלי</h4>
+                <p>נשתמש ב<strong>מערך מעגלי</strong>: כאשר מגיעים לסוף המערך, חוזרים להתחלה. כך נמנעים מהזזת איברים.</p>
+            </div>
+
+            <h3>מבנה המערך המעגלי:</h3>
+            <p>נשתמש בארבעה משתנים:</p>
+            <ul>
+                <li><strong>front</strong> – אינדקס ראש התור.</li>
+                <li><strong>back</strong> – אינדקס סוף התור (המקום הפנוי הבא).</li>
+                <li><strong>capacity</strong> – גודל המערך הכולל.</li>
+                <li><strong>size</strong> – כמה איברים יש בתור כרגע.</li>
+            </ul>
+
+            <h3>הדמיה:</h3>
+            <div class="visualization">
+                <p><strong>אחרי 4 פעולות enqueue (5, 13, 24, 45):</strong></p>
+                <p style="font-family: monospace;">[5, 13, 24, 45, _]<br>
+                ↑front &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↑back</p>
+                <p><strong>אחרי enqueue(2) – back חוזר לתחילת המערך:</strong></p>
+                <p style="font-family: monospace;">[5, 13, 24, 45, 2]<br>
+                ↑front&back</p>
+                <p><strong>אחרי dequeue() – front מתקדם:</strong></p>
+                <p style="font-family: monospace;">[_, 13, 24, 45, 2]<br>
+                &nbsp;&nbsp; ↑front &nbsp;&nbsp;&nbsp;&nbsp; ↑back</p>
+            </div>
+
+            <h3>מימוש ב-Java:</h3>
+            <pre><code><span class="keyword">public class</span> <span class="type">ArrayQueue</span> {
+    <span class="keyword">private int</span>[] elements;
+    <span class="keyword">private int</span> front;
+    <span class="keyword">private int</span> back;
+    <span class="keyword">private int</span> size;
+    <span class="keyword">private int</span> capacity;
+    
+    <span class="comment">// יצירת תור חדש בגודל N</span>
+    <span class="keyword">public</span> <span class="function">ArrayQueue</span>(<span class="type">int</span> N) {
+        elements = <span class="keyword">new int</span>[N];
+        front = back = <span class="number">0</span>;
+        size = <span class="number">0</span>;
+        capacity = N;
+    }
+    
+    <span class="comment">// הוספת איבר</span>
+    <span class="keyword">public void</span> <span class="function">enqueue</span>(<span class="type">int</span> x) {
+        <span class="keyword">if</span>(size == capacity)
+            <span class="keyword">throw new</span> <span class="function">RuntimeException</span>(<span class="string">"Overflow error"</span>);
+        
+        elements[back] = x;
+        back = (back + <span class="number">1</span>) % capacity;   <span class="comment">// חישוב מעגלי!</span>
+        size++;
+    }
+    
+    <span class="comment">// הוצאת איבר</span>
+    <span class="keyword">public int</span> <span class="function">dequeue</span>() {
+        <span class="keyword">if</span>(size == <span class="number">0</span>)
+            <span class="keyword">throw new</span> <span class="function">RuntimeException</span>(<span class="string">"Underflow error"</span>);
+        
+        <span class="type">int</span> x = elements[front];
+        size--;
+        front = (front + <span class="number">1</span>) % capacity;  <span class="comment">// חישוב מעגלי!</span>
+        <span class="keyword">return</span> x;
+    }
+    
+    <span class="keyword">public boolean</span> <span class="function">isEmpty</span>() {
+        <span class="keyword">return</span> size == <span class="number">0</span>;
+    }
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li><strong>מפתח האלגוריתם</strong>: <code>(back + 1) % capacity</code> – אם back מגיע לסוף המערך, מודולו מחזיר אותו ל-0.</li>
+                <li><code>size</code> עוקב אחר מספר האיברים כדי לדעת אם המערך מלא או ריק.</li>
+                <li>בלי <code>size</code>, היה קשה להבחין בין מערך מלא לריק (בשניהם <code>front == back</code>).</li>
+            </ul>
+
+            <h2>תרגיל: מיון תור באמצעות תורים</h2>
+            <div class="intro-box">
+                <p><strong>שאלה</strong>: כתבו שיטה <code>sort</code> שמקבלת תור q וממיינת את איבריו בסדר עולה. מותר להשתמש בתורי עזר ובמשתנים, אסור להשתמש במערכים או מחרוזות. מותר מיון ב-<code>O(n²)</code>.</p>
+            </div>
+
+            <h3>פתרון:</h3>
+            <pre><code><span class="keyword">public void</span> <span class="function">sort</span>(<span class="type">Queue</span> q) {
+    <span class="type">int</span> min;
+    <span class="type">Queue</span> sorted = <span class="keyword">new</span> <span class="function">Queue</span>();
+    <span class="type">Queue</span> temp = <span class="keyword">new</span> <span class="function">Queue</span>();
+    
+    <span class="keyword">while</span>(!q.<span class="function">isEmpty</span>()) {
+        min = q.<span class="function">dequeue</span>();           <span class="comment">// מתחילים מהאיבר הראשון</span>
+        
+        <span class="comment">// מוצאים את המינימום ב-q, שאר האיברים עוברים ל-temp</span>
+        <span class="keyword">while</span>(!q.<span class="function">isEmpty</span>()) {
+            <span class="type">int</span> x = q.<span class="function">dequeue</span>();
+            <span class="keyword">if</span>(x &lt; min) {
+                temp.<span class="function">enqueue</span>(min);
+                min = x;
+            } <span class="keyword">else</span> {
+                temp.<span class="function">enqueue</span>(x);
+            }
+        }
+        
+        <span class="comment">// המינימום עובר ל-sorted</span>
+        sorted.<span class="function">enqueue</span>(min);
+        
+        <span class="comment">// מחליפים בין q ל-temp</span>
+        <span class="type">Queue</span> t = temp;
+        temp = q;
+        q = t;
+    }
+    
+    <span class="comment">// מחזירים את האיברים הממוינים חזרה ל-q</span>
+    <span class="keyword">while</span>(!sorted.<span class="function">isEmpty</span>())
+        q.<span class="function">enqueue</span>(sorted.<span class="function">dequeue</span>());
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ol>
+                <li>בכל איטרציה של הלולאה החיצונית, מוצאים את המינימום הנוכחי ב-q.</li>
+                <li>שאר האיברים עוברים ל-temp.</li>
+                <li>המינימום שנמצא מועבר ל-sorted.</li>
+                <li>מחליפים בין q ל-temp ומתחילים איטרציה חדשה.</li>
+                <li>בסוף, sorted מכיל את כל האיברים בסדר עולה – מעבירים אותם חזרה ל-q.</li>
+            </ol>
+            <p><strong>זמן ריצה:</strong> <span class="complexity average">O(n²)</span> (כמו מיון בחירה).</p>
+
+            <h2>שימושים נפוצים בתור</h2>
+            <ul>
+                <li><strong>תורי דפוס/הדפסה</strong> במערכות הפעלה.</li>
+                <li><strong>BFS (חיפוש לרוחב)</strong> בגרפים ועצים.</li>
+                <li><strong>תורי בקשות HTTP</strong> בשרתים.</li>
+                <li><strong>תורי מוסיקה/וידאו</strong> – רשימות השמעה.</li>
+                <li><strong>מערכות הזמנות</strong> בנקים, ממשלה, וכו'.</li>
+                <li><strong>תורי הודעות</strong> במערכות מבוזרות (Message Queues).</li>
+            </ul>
+
+            <h2>סיכום זמני ריצה</h2>
+            <table>
+                <tr>
+                    <th>פעולה</th>
+                    <th>רשימה מקושרת</th>
+                    <th>מערך מעגלי</th>
+                </tr>
+                <tr>
+                    <td>enqueue</td>
+                    <td><span class="complexity excellent">O(1)</span></td>
+                    <td><span class="complexity excellent">O(1)</span></td>
+                </tr>
+                <tr>
+                    <td>dequeue</td>
+                    <td><span class="complexity excellent">O(1)</span></td>
+                    <td><span class="complexity excellent">O(1)</span></td>
+                </tr>
+                <tr>
+                    <td>isEmpty</td>
+                    <td><span class="complexity excellent">O(1)</span></td>
+                    <td><span class="complexity excellent">O(1)</span></td>
+                </tr>
+                <tr>
+                    <td>גודל מוגבל?</td>
+                    <td>❌ דינמי</td>
+                    <td>✅ קבוע</td>
+                </tr>
+            </table>
+
+            <h2>השוואה: מחסנית vs תור</h2>
+            <table>
+                <tr>
+                    <th>פרמטר</th>
+                    <th>מחסנית (Stack)</th>
+                    <th>תור (Queue)</th>
+                </tr>
+                <tr>
+                    <td>סדר</td>
+                    <td>LIFO – אחרון נכנס, ראשון יוצא</td>
+                    <td>FIFO – ראשון נכנס, ראשון יוצא</td>
+                </tr>
+                <tr>
+                    <td>מיקום הכנסה</td>
+                    <td>ראש המחסנית</td>
+                    <td>סוף התור</td>
+                </tr>
+                <tr>
+                    <td>מיקום הוצאה</td>
+                    <td>ראש המחסנית</td>
+                    <td>ראש התור</td>
+                </tr>
+                <tr>
+                    <td>דוגמה מהעולם</td>
+                    <td>ערימת צלחות</td>
+                    <td>תור בסופרמרקט</td>
+                </tr>
+            </table>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="10-binary-tree.html">הבא: עצים בינאריים ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

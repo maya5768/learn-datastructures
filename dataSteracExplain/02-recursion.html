@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>רקורסיה ונוסחת נסיגה</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 רקורסיה ונוסחת נסיגה</h1>
+            <p class="subtitle">ניתוח זמן ריצה של פונקציות רקורסיביות</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זו רקורסיה?</h2>
+            <div class="intro-box">
+                <p><strong>רקורסיה</strong> היא טכניקת תכנות שבה פונקציה קוראת לעצמה. כדי לתכנן רקורסיה נכונה, עלינו לחשב את <strong>נוסחת הנסיגה</strong> של הבעיה – כלומר, איך אפשר להביע את הפתרון לבעיה בגודל n באמצעות פתרון של בעיות קטנות יותר.</p>
+            </div>
+
+            <div class="key-points">
+                <h4>🔑 שני מרכיבי הרקורסיה</h4>
+                <ul>
+                    <li><strong>תנאי עצירה (Base Case)</strong> – מקרה בסיסי שאנחנו יודעים לפתור ישירות.</li>
+                    <li><strong>קריאה רקורסיבית</strong> – פתרון הבעיה באמצעות קריאה לעצמה עם קלט קטן יותר.</li>
+                </ul>
+            </div>
+
+            <h2>דוגמה 1: חישוב עצרת (Factorial)</h2>
+            <p>נרצה לכתוב שיטה שמקבלת מספר שלם ומחזירה את העצרת שלו:</p>
+
+            <h3>נוסחת הנסיגה:</h3>
+            <pre><code>T(1) = 1                    <span class="comment">// תנאי עצירה</span>
+T(n) = T(n-1) * n          <span class="comment">// קריאה רקורסיבית</span></code></pre>
+
+            <h3>פירוט:</h3>
+            <pre><code>T1 = 1! = 1
+T2 = 2! = 1*2 = T1 * 2
+T3 = 3! = 1*2*3 = T2 * 3
+T4 = 4! = 1*2*3*4 = T3 * 4
+...
+Tn = n! = T(n-1) * n</code></pre>
+
+            <h3>מימוש ב-Java:</h3>
+            <pre><code><span class="keyword">public static int</span> <span class="function">T</span>(<span class="type">int</span> n) {
+    <span class="keyword">if</span>(n == <span class="number">1</span>) {          <span class="comment">// תנאי עצירה</span>
+        <span class="keyword">return</span> <span class="number">1</span>;
+    }
+    <span class="keyword">return</span> <span class="function">T</span>(n - <span class="number">1</span>) * n;   <span class="comment">// קריאה רקורסיבית</span>
+}</code></pre>
+
+            <div class="info-box">
+                <h4>ניתוח זמן ריצה:</h4>
+                <p>זמן הריצה של פונקציה זו הוא <span class="complexity good">O(n)</span> – יש n קריאות רקורסיביות, ובכל קריאה מבוצעת פעולה אחת (כפל).</p>
+            </div>
+
+            <h2>דוגמה 2: סכום איברי מערך</h2>
+            <pre><code><span class="keyword">public int</span> <span class="function">sumArray</span>(<span class="type">int</span>[] a, <span class="type">int</span> i) {
+    <span class="keyword">if</span>(i == a.length)
+        <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="keyword">return</span> a[i] + <span class="function">sumArray</span>(a, i + <span class="number">1</span>);
+}</code></pre>
+
+            <h3>נוסחת הנסיגה:</h3>
+            <pre><code>T(n) = T(n-1) + 1
+T(0) = 1</code></pre>
+
+            <h3>פתרון:</h3>
+            <p>בכל שלב הבעיה קטנה ב-1, ובכל שלב משקיעים O(1) עבודה. לכן סך הכל יש n שלבים של עבודה קבועה:</p>
+            <pre><code>T(n) = T(n-1) + 1 = T(n-2) + 1 + 1 = ... = n = O(n)</code></pre>
+
+            <h2>עץ רקורסיה (Recursion Tree)</h2>
+            <div class="intro-box">
+                <p><strong>עץ רקורסיה</strong> הוא דרך ויזואלית לתאר את נוסחת הנסיגה. באמצעות העץ אפשר לקבל תמונה טובה יותר לגבי החישובים שצריך לבצע בפתרון.</p>
+                <p><strong>הרעיון</strong>: כל פונקציה רקורסיבית היא צומת בעץ, וכל קריאה רקורסיבית היא התפצלות מהצומת.</p>
+            </div>
+
+            <h3>דוגמה 3: פונקציה עם חלוקה לחצי</h3>
+            <pre><code><span class="keyword">public int</span> <span class="function">f</span>(<span class="type">int</span>[] a, <span class="type">int</span> start, <span class="type">int</span> end) {
+    <span class="keyword">if</span>(start == end)
+        <span class="keyword">return</span> a[start];
+    <span class="type">int</span> left = <span class="function">f</span>(a, start, (start + end) / <span class="number">2</span>);
+    <span class="type">int</span> right = <span class="function">f</span>(a, <span class="number">1</span> + (start + end) / <span class="number">2</span>, end);
+    <span class="keyword">return</span> left + right;
+}</code></pre>
+
+            <h3>נוסחת הנסיגה:</h3>
+            <pre><code>T(n) = 2T(n/2) + 1</code></pre>
+
+            <h3>פתרון באמצעות עץ רקורסיה:</h3>
+            <div class="visualization">
+                <p><strong>רמה 0:</strong> T(n) – עבודה של 1<br>
+                <strong>רמה 1:</strong> 2 × T(n/2) – עבודה של 2<br>
+                <strong>רמה 2:</strong> 4 × T(n/4) – עבודה של 4<br>
+                <strong>רמה k:</strong> 2^k × T(n/2^k) – עבודה של 2^k<br>
+                <strong>גובה העץ:</strong> log n</p>
+            </div>
+
+            <p>סכום העבודה בכל הרמות:</p>
+            <pre><code>T(n) = 1 + 2 + 4 + ... + 2^(log n) = 2n - 1 = O(n)</code></pre>
+
+            <h2>דוגמה 4: נוסחה מורכבת יותר</h2>
+            <p>נפתור את הנוסחה:</p>
+            <pre><code>T(n) = T(n/3) + T(2n/3) + n</code></pre>
+
+            <h3>בניית עץ רקורסיה:</h3>
+            <div class="visualization">
+                <p>רמה 0: n<br>
+                רמה 1: n/3 + 2n/3 = n<br>
+                רמה 2: n/9 + 2n/9 + 2n/9 + 4n/9 = n<br>
+                ...</p>
+                <p><strong>בכל רמה יש עבודה של O(n)!</strong></p>
+            </div>
+
+            <h3>חישוב גובה העץ:</h3>
+            <p>הגובה נקבע לפי הענף הארוך ביותר – במקרה זה, הענף שכל פעם מחלק ב-2/3:</p>
+            <pre><code>גובה = log_(3/2)(n) = O(log n)</code></pre>
+
+            <h3>סיכום:</h3>
+            <pre><code>T(n) = O(n) * O(log n) = O(n log n)</code></pre>
+
+            <div class="key-points">
+                <h4>💡 טיפים לפתרון נוסחאות נסיגה</h4>
+                <ol>
+                    <li><strong>זיהוי המבנה</strong>: כתבו את נוסחת הנסיגה במפורש.</li>
+                    <li><strong>ציור העץ</strong>: שרטטו את העץ עם כמה רמות ראשונות.</li>
+                    <li><strong>חישוב עבודה בכל רמה</strong>: סכום העבודה בכל רמה.</li>
+                    <li><strong>גובה העץ</strong>: חשבו כמה רמות יש בעץ.</li>
+                    <li><strong>סכימה</strong>: סכמו את כל העבודות של כל הרמות.</li>
+                </ol>
+            </div>
+
+            <div class="info-box">
+                <h4>💭 שימו לב:</h4>
+                <p>בדף הבא נראה <strong>משפט האב (Master Theorem)</strong> – כלי יעיל לפתרון מהיר של סוג מסוים של נוסחאות נסיגה.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="03-asymptotic.html">הבא: חסמים אסימפטוטיים ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

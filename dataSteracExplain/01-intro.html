@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מבוא למבני נתונים</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📘 מבוא למבני נתונים</h1>
+            <p class="subtitle">הגדרות בסיסיות ואלגוריתמים</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מהו הקורס?</h2>
+            <div class="intro-box">
+                <p>הקורס עוסק בשני נושאים עיקריים:</p>
+                <ul>
+                    <li><strong>אלגוריתמים</strong> – דרך יעילה לפתרון בעיה.</li>
+                    <li><strong>מבני נתונים</strong> – דרך יעילה לארגון הנתונים.</li>
+                </ul>
+            </div>
+
+            <h2>מהם מבני נתונים?</h2>
+            <p>מבני נתונים הם דרכים לארגן ולאחסן מידע באופן שמאפשר לנו לגשת ולעבד אותו בצורה יעילה ומהימנה. כאשר אנחנו מדברים על "מבני נתונים", אנחנו מתכוונים לאופן שבו המידע מאורגן. ישנם סוגים רבים של מבני נתונים, כולל רשימות, טבלאות, עצים, ועוד.</p>
+
+            <h3>למה מבני נתונים חשובים?</h3>
+            <p>מבני נתונים חשובים מאוד בעולם המחשבים והתכנות מכיוון שהם מאפשרים לנו לנהל ולעבד מידע בצורה יעילה. באמצעותם ניתן:</p>
+            <ul>
+                <li>לכתוב תוכניות מהירות ויעילות</li>
+                <li>לבנות אתרים ויישומים</li>
+                <li>לפתח פתרונות לבעיות מגוונות בתעשייה ובמחקר</li>
+            </ul>
+
+            <h2>סוגי מבני נתונים</h2>
+            <table>
+                <tr>
+                    <th>שם המבנה</th>
+                    <th>תיאור</th>
+                </tr>
+                <tr>
+                    <td><strong>רשימות (Lists)</strong></td>
+                    <td>אוסף של פריטים המאוחסנים בסדר מסוים. גמישות ונוחות לשימוש.</td>
+                </tr>
+                <tr>
+                    <td><strong>טבלאות (Tables)</strong></td>
+                    <td>מבני נתונים בצורת שורות ועמודות. נפוצים בבסיסי נתונים.</td>
+                </tr>
+                <tr>
+                    <td><strong>עצים (Trees)</strong></td>
+                    <td>מבנה נתונים היררכי עם צמתים וענפים.</td>
+                </tr>
+                <tr>
+                    <td><strong>מחסניות ותורים</strong></td>
+                    <td>מבני נתונים ליניאריים עם חוקי גישה ייחודיים (LIFO/FIFO).</td>
+                </tr>
+                <tr>
+                    <td><strong>רשימות מקושרות</strong></td>
+                    <td>מבני נתונים דינמיים שבהם כל איבר מצביע לאיבר הבא.</td>
+                </tr>
+            </table>
+
+            <h2>מהו אלגוריתם?</h2>
+            <div class="intro-box">
+                <p>אלגוריתם הוא שיטה לפתרון בעיה באמצעות מחשב. בקורס נלמד:</p>
+                <ul>
+                    <li>שיטות לפיתוח ועיצוב אלגוריתמים</li>
+                    <li>הוכחת נכונות של אלגוריתמים</li>
+                    <li>חישוב זמן הריצה שלהם</li>
+                </ul>
+            </div>
+
+            <h3>דרכים לתיאור אלגוריתם</h3>
+
+            <h4>1. שפה טבעית (עברית/אנגלית וכו')</h4>
+            <p><strong>דוגמה</strong>: "נעבור על כל המספרים במערך ונסכם אותם אחד אחד."</p>
+
+            <div class="success-box">
+                <h4>יתרונות:</h4>
+                <ul>
+                    <li>אפשר להביע הכל בשפה טבעית</li>
+                    <li>אין צורך להיות מוגבלים לרישום טכני</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>חסרונות:</h4>
+                <ul>
+                    <li>השפה נוטה להיות דו-משמעית ולא מדויקת</li>
+                    <li>לעיתים התיאור כללי מדי ולא מספק</li>
+                </ul>
+            </div>
+
+            <h4>2. שפת תכנות (למשל Java)</h4>
+            <p>דרך נוספת לתאר אלגוריתם היא לכתוב אותו בשפת תכנות. להלן האלגוריתם לסכימת איברי מערך ב-Java:</p>
+
+            <pre><code><span class="keyword">public static int</span> <span class="function">sumArray</span>(<span class="type">int</span>[] a) {
+    <span class="type">int</span> sum = <span class="number">0</span>;
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) {
+        sum += a[i];
+    }
+    <span class="keyword">return</span> sum;
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ul>
+                <li><code>int sum = 0;</code> – אתחול משתנה שישמור את הסכום.</li>
+                <li><code>for</code> – לולאה העוברת על כל האיברים במערך.</li>
+                <li><code>sum += a[i];</code> – הוספת כל איבר לסכום הכולל.</li>
+                <li><code>return sum;</code> – החזרת הסכום הסופי.</li>
+            </ul>
+
+            <div class="key-points">
+                <h4>💡 נקודות חשובות</h4>
+                <ul>
+                    <li>לכל מבנה נתונים יש פעולות עם זמני ריצה שונים.</li>
+                    <li>בחירת מבנה הנתונים הנכון לבעיה היא קריטית ליעילות.</li>
+                    <li>בקורס נלמד לבחור בין מבנים שונים לפי הדרישות.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a></p>
+        </footer>
+    </div>
+</body>
+</html>

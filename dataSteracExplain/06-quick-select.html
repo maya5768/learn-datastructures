@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Select</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Quick Select</h1>
+            <p class="subtitle">מציאת האיבר ה-k בגודלו במערך לא ממוין</p>
+        </header>
+
+        <nav class="breadcrumb">
+            <a href="index.html">← חזרה לתוכן עניינים</a>
+        </nav>
+
+        <main>
+            <h2>מה זה Quick Select?</h2>
+            <div class="intro-box">
+                <p><strong>Quick Select</strong> הוא אלגוריתם לחיפוש האלמנט ה-k בגודלו מתוך רשימה לא ממוינת. האלגוריתם דומה במבנהו ל-Quick Sort, אך במקום למיין את כל הרשימה, הוא <strong>מתמקד רק במציאת האלמנט הרצוי</strong>.</p>
+            </div>
+
+            <div class="key-points">
+                <h4>🔑 הגדרת "האיבר ה-k הכי קטן"</h4>
+                <p>בהינתן מערך המכיל n איברים שונים זה מזה, <strong>האיבר ה-k הכי קטן</strong> הוא איבר במערך ש-(k-1) איברים אחרים קטנים ממנו.</p>
+                <ul>
+                    <li>האיבר ה-1 הכי קטן = <strong>המינימום</strong></li>
+                    <li>האיבר ה-n הכי קטן = <strong>המקסימום</strong></li>
+                </ul>
+            </div>
+
+            <h2>דוגמה</h2>
+            <div class="visualization">
+                <p><strong>קלט:</strong></p>
+                <p>
+                    <span class="node-box">7</span>
+                    <span class="node-box">4</span>
+                    <span class="node-box">8</span>
+                    <span class="node-box">21</span>
+                    <span class="node-box">3</span>
+                    <span class="node-box">1</span>
+                    <span class="node-box">9</span>
+                    <span class="node-box">15</span>
+                    <span class="node-box">12</span>
+                </p>
+                <p><strong>quickSelect(list, 3)</strong> – נרצה את האיבר ה-3 הכי קטן</p>
+                <p>אם נמיין: [1, 3, <strong style="color: #c7254e;">4</strong>, 7, 8, 9, 12, 15, 21] → <strong>התוצאה: 4</strong></p>
+            </div>
+
+            <h2>שלבי האלגוריתם</h2>
+
+            <h3>שלב 1: בחירת ציר (Pivot Selection)</h3>
+            <p>בוחרים איבר מהמערך שישמש כציר. בחירה אקראית לרוב עובדת טוב.</p>
+
+            <h3>שלב 2: חלוקה (Partition)</h3>
+            <p>מחלקים את המערך לשני חלקים:</p>
+            <ul>
+                <li>חלק אחד עם כל האלמנטים הקטנים מהציר.</li>
+                <li>חלק שני עם כל האלמנטים הגדולים מהציר.</li>
+            </ul>
+
+            <h3>שלב 3: חיפוש רקורסיבי בצד אחד בלבד</h3>
+            <p>אחרי partition, הציר נמצא במקומו הסופי (במיקום <code>curr</code>). כעת:</p>
+            <ul>
+                <li>אם <code>curr - left == k - 1</code> – מצאנו את האיבר, החזר אותו.</li>
+                <li>אם <code>curr - left > k - 1</code> – האיבר המבוקש בצד <strong>שמאל</strong>.</li>
+                <li>אם <code>curr - left &lt; k - 1</code> – האיבר המבוקש בצד <strong>ימין</strong>.</li>
+            </ul>
+
+            <div class="info-box">
+                <p>💡 <strong>בניגוד ל-Quick Sort שממשיך את שני הצדדים, Quick Select ממשיך רק בצד אחד!</strong></p>
+            </div>
+
+            <h2>מימוש ב-Java</h2>
+
+            <h3>שיטת kthSmallest:</h3>
+            <pre><code><span class="keyword">public int</span> <span class="function">kthSmallest</span>(<span class="type">int</span>[] a, <span class="type">int</span> left, <span class="type">int</span> right, <span class="type">int</span> k) {
+    <span class="type">int</span> curr = <span class="function">partition</span>(a, left, right);
+    
+    <span class="keyword">if</span>(curr - left == k - <span class="number">1</span>)
+        <span class="keyword">return</span> a[curr];       <span class="comment">// מצאנו!</span>
+    
+    <span class="keyword">if</span>(curr - left &gt; k - <span class="number">1</span>)
+        <span class="keyword">return</span> <span class="function">kthSmallest</span>(a, left, curr - <span class="number">1</span>, k);  <span class="comment">// חפש בצד שמאל</span>
+    
+    <span class="keyword">return</span> <span class="function">kthSmallest</span>(a, curr + <span class="number">1</span>, right, k - (curr - left + <span class="number">1</span>));  <span class="comment">// חפש בצד ימין</span>
+}</code></pre>
+
+            <h4>הסבר הקוד:</h4>
+            <ol>
+                <li><code>partition</code> – מחלק את המערך ומחזיר את מיקום הציר.</li>
+                <li><code>curr - left</code> – מחשב כמה איברים יש משמאל לציר.</li>
+                <li>אם כמות זו שווה ל-<code>k-1</code>, הציר הוא האיבר ה-k. <strong>מצאנו!</strong></li>
+                <li>אם יש יותר איברים משמאל מ-k, האיבר המבוקש נמצא בצד שמאל.</li>
+                <li>אם יש פחות איברים משמאל מ-k, האיבר נמצא בצד ימין. <strong>חשוב</strong>: עדכן את k להיות <code>k - (curr - left + 1)</code> כי בצד ימין נפלנו על "מערך חדש".</li>
+            </ol>
+
+            <h3>פונקציית partition (זהה ל-Quick Sort):</h3>
+            <pre><code><span class="keyword">public int</span> <span class="function">partition</span>(<span class="type">int</span>[] a, <span class="type">int</span> left, <span class="type">int</span> right) {
+    <span class="type">int</span> pivot = a[left];
+    <span class="type">int</span> p = left;
+    <span class="type">int</span> q = right;
+    
+    <span class="keyword">while</span>(p &lt; q) {
+        <span class="keyword">while</span>(a[q] &gt; pivot && p &lt; q) q--;
+        <span class="keyword">while</span>(a[p] &lt;= pivot && p &lt; q) p++;
+        <span class="function">swap</span>(a, p, q);
+    }
+    
+    <span class="function">swap</span>(a, left, p);
+    <span class="keyword">return</span> p;
+}</code></pre>
+
+            <h2>הדמיה חזותית של quickSelect(arr, 3)</h2>
+
+            <div class="visualization">
+                <p><strong>מערך התחלתי:</strong> [7, 4, 8, 21, 3, 1, 9, 15, 12]</p>
+                <p><strong>שלב 1:</strong> partition עם pivot=7</p>
+                <p><strong>אחרי partition:</strong> [1, 4, 3, <span style="color: #c7254e; font-weight: bold;">7</span>, 21, 8, 9, 15, 12]</p>
+                <p>הציר (7) במיקום 3, כלומר 3 איברים משמאלו.</p>
+                <p><strong>בדיקה:</strong> curr - left = 3, k-1 = 2</p>
+                <p>3 > 2 → האיבר ה-3 הכי קטן נמצא <strong>בצד שמאל!</strong></p>
+                <p><strong>שלב 2:</strong> partition על [1, 4, 3] עם pivot=1</p>
+                <p><strong>אחרי partition:</strong> [<span style="color: #c7254e; font-weight: bold;">1</span>, 4, 3]</p>
+                <p>curr - left = 0, k-1 = 2 → מחפשים בימין עם k חדש = 2</p>
+                <p><strong>שלב 3:</strong> partition על [4, 3] עם pivot=4</p>
+                <p><strong>אחרי partition:</strong> [3, <span style="color: #c7254e; font-weight: bold;">4</span>]</p>
+                <p>curr - left = 1, k-1 = 1 → <strong>מצאנו! התשובה: 4</strong></p>
+            </div>
+
+            <h2>ניתוח זמן ריצה</h2>
+
+            <h3>מקרה ממוצע:</h3>
+            <div class="intro-box">
+                <p>בממוצע, בכל שלב האלגוריתם מקטין את גודל המערך בחצי (הוא ממשיך רק בצד אחד):</p>
+                <pre><code>T(n) = T(n/2) + n</code></pre>
+                <p>לפי משפט האב (מקרה 3):</p>
+                <ul>
+                    <li><code>a = 1, b = 2, f(n) = n</code></li>
+                    <li><code>log_b(a) = 0</code></li>
+                    <li><code>f(n) = Ω(n^(0+1))</code></li>
+                    <li>מקרה 3 → <code>T(n) = Θ(n)</code></li>
+                </ul>
+            </div>
+
+            <h3>מקרה גרוע:</h3>
+            <p>אם בכל פעם הציר הוא האיבר המינימלי/מקסימלי:</p>
+            <pre><code>T(n) = T(n-1) + n = O(n²)</code></pre>
+
+            <h2>טבלת זמני ריצה</h2>
+            <table>
+                <tr>
+                    <th>מקרה</th>
+                    <th>זמן ריצה</th>
+                </tr>
+                <tr>
+                    <td>מקרה טוב</td>
+                    <td><span class="complexity excellent">O(n)</span></td>
+                </tr>
+                <tr>
+                    <td>מקרה ממוצע</td>
+                    <td><span class="complexity excellent">O(n)</span></td>
+                </tr>
+                <tr>
+                    <td>מקרה גרוע</td>
+                    <td><span class="complexity average">O(n²)</span></td>
+                </tr>
+            </table>
+
+            <div class="key-points">
+                <h4>💡 יתרון מרכזי</h4>
+                <p>במקום למיין את המערך כולו ב-<code>O(n log n)</code> רק כדי למצוא איבר אחד, Quick Select מוצא את האיבר ה-k הכי קטן ב-<code>O(n)</code> בממוצע – מהיר יותר!</p>
+            </div>
+
+            <h2>שימושים נפוצים</h2>
+            <ul>
+                <li><strong>מציאת המדיאן</strong> – האיבר ה-<code>n/2</code> הכי קטן.</li>
+                <li><strong>מציאת top-k elements</strong> – k האיברים הגדולים ביותר.</li>
+                <li><strong>סטטיסטיקות</strong> – אחוזונים, רבעונים.</li>
+                <li><strong>בחירת ציר טוב יותר ב-Quick Sort</strong> – בחירת המדיאן כציר.</li>
+            </ul>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← חזרה לתוכן עניינים</a> | <a href="07-linked-list.html">הבא: רשימות מקושרות ←</a></p>
+        </footer>
+    </div>
+</body>
+</html>

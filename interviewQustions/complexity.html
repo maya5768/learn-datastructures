@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סיבוכיות זמן — Big O</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22253a;
+    --border: rgba(255,255,255,0.08);
+    --text: #e2e8f0;
+    --text-muted: #8892a4;
+    --blue: #378ADD;
+    --blue-light: #85B7EB;
+    --blue-bg: rgba(55,138,221,0.12);
+    --orange: #D85A30;
+    --orange-bg: rgba(216,90,48,0.12);
+    --green: #1D9E75;
+    --green-bg: rgba(29,158,117,0.12);
+    --purple: #7F77DD;
+    --purple-bg: rgba(127,119,221,0.12);
+    --purple-light: #AFA9EC;
+    --red: #E24B4A;
+    --red-bg: rgba(226,75,74,0.12);
+    --red-light: #F09595;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Heebo', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+
+  .hero {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 50%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2.5rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(127,119,221,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--purple-bg); border: 1px solid rgba(127,119,221,0.3);
+    border-radius: 20px; padding: 4px 14px;
+    font-size: 12px; color: var(--purple-light);
+    font-family: var(--mono); margin-bottom: 1.25rem; letter-spacing: 0.05em;
+  }
+  .hero h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 700; color: #fff; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+  .hero h1 span { color: var(--purple-light); }
+  .hero p { color: var(--text-muted); font-size: 15px; max-width: 480px; margin: 0 auto; }
+  .chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 1.25rem; }
+  .chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; font-size: 12px; font-family: var(--mono); color: var(--text-muted); }
+  .chip.purple { color: var(--purple-light); border-color: rgba(127,119,221,0.3); background: var(--purple-bg); }
+  .chip.green { color: var(--green); border-color: rgba(29,158,117,0.3); background: var(--green-bg); }
+
+  nav {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0.75rem 2rem; display: flex; gap: 1.5rem; align-items: center;
+    font-size: 13px; flex-wrap: wrap;
+  }
+  nav a { color: var(--text-muted); text-decoration: none; font-family: var(--mono); transition: color 0.2s; }
+  nav a:hover { color: var(--blue-light); }
+  nav a.active { color: var(--purple-light); }
+  nav .sep { color: var(--border); }
+
+  .container { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .section { margin-bottom: 2.5rem; }
+  .section-label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .card h3 { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
+  .card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+  .complexity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+  .complexity-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: border-color 0.2s;
+  }
+  .complexity-card:hover { border-color: rgba(255,255,255,0.18); }
+  .complexity-card .badge {
+    display: inline-block; font-family: var(--mono); font-size: 18px; font-weight: 500;
+    padding: 4px 12px; border-radius: 8px; width: fit-content;
+  }
+  .complexity-card .name { font-size: 14px; font-weight: 500; }
+  .complexity-card .desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .complexity-card .example { font-size: 12px; font-family: var(--mono); margin-top: 4px; }
+
+  .c-green .badge { background: var(--green-bg); color: #5DCAA5; }
+  .c-green .example { color: #5DCAA5; }
+  .c-blue .badge { background: var(--blue-bg); color: var(--blue-light); }
+  .c-blue .example { color: var(--blue-light); }
+  .c-purple .badge { background: var(--purple-bg); color: var(--purple-light); }
+  .c-purple .example { color: var(--purple-light); }
+  .c-orange .badge { background: var(--orange-bg); color: #F0997B; }
+  .c-orange .example { color: #F0997B; }
+  .c-red .badge { background: var(--red-bg); color: var(--red-light); }
+  .c-red .example { color: var(--red-light); }
+
+  .rule-list { display: flex; flex-direction: column; gap: 10px; }
+  .rule {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.25rem;
+  }
+  .rule-icon {
+    font-family: var(--mono); font-size: 13px; font-weight: 500;
+    background: var(--purple-bg); color: var(--purple-light);
+    border: 1px solid rgba(127,119,221,0.3);
+    border-radius: 6px; padding: 2px 8px; flex-shrink: 0; white-space: nowrap;
+    margin-top: 2px;
+  }
+  .rule-body { flex: 1; }
+  .rule-body strong { font-size: 14px; font-weight: 500; display: block; margin-bottom: 4px; }
+  .rule-body p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.6; }
+  .rule-body .math { font-family: var(--mono); color: var(--blue-light); font-size: 13px; margin-top: 6px; display: block; }
+
+  .table-wrap { overflow-x: auto; margin-top: 1rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { font-size: 12px; font-weight: 500; color: var(--text-muted); text-align: right; padding: 8px 12px; border-bottom: 1px solid var(--border); letter-spacing: 0.05em; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .td-badge { font-family: var(--mono); font-size: 13px; font-weight: 500; padding: 2px 8px; border-radius: 6px; display: inline-block; }
+
+  .highlight-box {
+    background: var(--purple-bg); border: 1px solid rgba(127,119,221,0.25);
+    border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
+  }
+  .highlight-box p { font-size: 14px; color: var(--purple-light); line-height: 1.7; margin: 0; }
+  .highlight-box strong { color: #cba6f7; }
+
+  .note { background: var(--orange-bg); border: 1px solid rgba(216,90,48,0.25); border-radius: 10px; padding: 1rem 1.25rem; font-size: 14px; color: #F0997B; margin-top: 1.25rem; line-height: 1.6; }
+  .note strong { color: #fab387; }
+
+  .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; overflow-x: auto; }
+  .bar-chart { display: flex; flex-direction: column; gap: 10px; direction: ltr; }
+  .bar-row { display: flex; align-items: center; gap: 12px; }
+  .bar-label { font-family: var(--mono); font-size: 12px; width: 80px; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 28px; background: var(--surface2); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-right: 10px; justify-content: flex-end; font-size: 11px; font-family: var(--mono); font-weight: 500; transition: width 0.6s ease; }
+  .bar-ops { font-size: 12px; font-family: var(--mono); color: var(--text-muted); width: 60px; flex-shrink: 0; }
+
+  .caption { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 8px; font-style: italic; }
+
+  footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); }
+  footer a { color: var(--blue-light); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 2rem 1rem 1.5rem; }
+    .container { padding: 1.5rem 1rem 3rem; }
+    .complexity-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Algorithm Analysis</div>
+  <h1>סיבוכיות <span>זמן</span></h1>
+  <p>Big O Notation — איך מודדים מהירות אלגוריתמים</p>
+  <div class="chips">
+    <div class="chip purple">Big O</div>
+    <div class="chip">O(1) עד O(n!)</div>
+    <div class="chip green">Java Examples</div>
+  </div>
+  <div style="display:flex;gap:6px;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;">
+    <a href="reverse-array-guide.html" style="padding:8px 20px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:var(--sans);font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;">Reverse Array</a>
+    <a href="complexity.html" style="padding:8px 20px;border-radius:9px;border:none;background:var(--blue);color:#fff;font-family:var(--sans);font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;">סיבוכיות זמן</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1: מה זה Big O -->
+  <div class="section">
+    <div class="section-label">מה זה בכלל?</div>
+    <div class="highlight-box">
+      <p>
+        <strong>Big O</strong> לא מודד כמה שניות לוקח האלגוריתם — הוא מודד <strong>איך הזמן גדל</strong> כשהקלט גדל.
+        אנחנו מתעלמים מקבועים ומפרטים קטנים, ומשאירים רק את <strong>הגורם הדומיננטי</strong>.
+      </p>
+    </div>
+    <div class="card">
+      <h3>דוגמה אינטואיטיבית</h3>
+      <p>נניח שיש לך ערימת 100 ספרים לסדר. אם מכפילים את הספרים ל-200 — כמה זמן לוקח?</p>
+      <br>
+      <p>
+        אם תמיד רק מסתכל על הספר הראשון — <span style="color:var(--green);font-family:var(--mono);">O(1)</span>, אכפת לך מכמות?<br>
+        אם עובר על כולם אחד אחד — <span style="color:var(--blue-light);font-family:var(--mono);">O(n)</span>, פי 2 ספרים = פי 2 זמן.<br>
+        אם משווה כל ספר לכל ספר אחר — <span style="color:#F0997B;font-family:var(--mono);">O(n²)</span>, פי 2 ספרים = פי 4 זמן.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: טבלת סיבוכיות -->
+  <div class="section">
+    <div class="section-label">הסיבוכיויות הנפוצות</div>
+    <div class="complexity-grid">
+
+      <div class="complexity-card c-green">
+        <div class="badge">O(1)</div>
+        <div class="name">קבוע</div>
+        <div class="desc">לא משנה כמה גדול הקלט — תמיד אותו זמן.</div>
+        <div class="example">arr[0] · HashMap.get()</div>
+      </div>
+
+      <div class="complexity-card c-blue">
+        <div class="badge">O(log n)</div>
+        <div class="name">לוגריתמי</div>
+        <div class="desc">חוצה את הבעיה לשניים בכל צעד.</div>
+        <div class="example">Binary Search</div>
+      </div>
+
+      <div class="complexity-card c-blue">
+        <div class="badge">O(n)</div>
+        <div name="name">ליניארי</div>
+        <div class="desc">עובר על כל הנתונים פעם אחת.</div>
+        <div class="example">reverse() · Linear Search</div>
+      </div>
+
+      <div class="complexity-card c-purple">
+        <div class="badge">O(n log n)</div>
+        <div class="name">לוגריתמי-ליניארי</div>
+        <div class="desc">עובר על הנתונים, וגם מחלק לשניים.</div>
+        <div class="example">Merge Sort · Quick Sort</div>
+      </div>
+
+      <div class="complexity-card c-orange">
+        <div class="badge">O(n²)</div>
+        <div class="name">ריבועי</div>
+        <div class="desc">לולאה בתוך לולאה על אותם נתונים.</div>
+        <div class="example">Bubble Sort · Insertion Sort</div>
+      </div>
+
+      <div class="complexity-card c-red">
+        <div class="badge">O(2ⁿ)</div>
+        <div class="name">אקספוננציאלי</div>
+        <div class="desc">מתפוצץ מהר מאוד — בדרך כלל לא יעיל.</div>
+        <div class="example">Fibonacci נאיבי · Subsets</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3: ויזואליזציה -->
+  <div class="section">
+    <div class="section-label">ויזואליזציה — עבור n=100</div>
+    <div class="chart-wrap">
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label" style="color:#5DCAA5;">O(1)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:1%;background:#1D9E75;color:#fff;">1</div></div>
+          <div class="bar-ops">1 פעולה</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--blue-light);">O(log n)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:2%;background:#378ADD;color:#fff;">7</div></div>
+          <div class="bar-ops">~7 פעולות</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--blue-light);">O(n)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:12%;background:#185FA5;color:#fff;">100</div></div>
+          <div class="bar-ops">100 פעולות</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--purple-light);">O(n log n)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:30%;background:#7F77DD;color:#fff;">664</div></div>
+          <div class="bar-ops">~664 פעולות</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:#F0997B;">O(n²)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:70%;background:#D85A30;color:#fff;">10,000</div></div>
+          <div class="bar-ops">10,000</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--red-light);">O(2ⁿ)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#A32D2D;color:#fff;">1.27 × 10³⁰</div></div>
+          <div class="bar-ops" style="font-size:10px;">אסטרונומי</div>
+        </div>
+      </div>
+      <p class="caption">מספר פעולות עבור n = 100</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4: כללי Big O -->
+  <div class="section">
+    <div class="section-label">כללי הפשטה</div>
+    <div class="rule-list">
+
+      <div class="rule">
+        <div class="rule-icon">כלל 1</div>
+        <div class="rule-body">
+          <strong>מורידים קבועים</strong>
+          <p>מספר קבוע של פעולות לא משנה את הקצב הכללי.</p>
+          <span class="math">O(3n) → O(n) &nbsp;·&nbsp; O(500) → O(1)</span>
+        </div>
+      </div>
+
+      <div class="rule">
+        <div class="rule-icon">כלל 2</div>
+        <div class="rule-body">
+          <strong>מורידים חלוקות</strong>
+          <p>גם אם עוברים רק על חצי הנתונים — זה עדיין ליניארי.</p>
+          <span class="math">O(n/2) → O(n)</span>
+        </div>
+      </div>
+
+      <div class="rule">
+        <div class="rule-icon">כלל 3</div>
+        <div class="rule-body">
+          <strong>שומרים רק את הגורם הדומיננטי</strong>
+          <p>כשיש כמה גורמים — הגדול ביותר שולט.</p>
+          <span class="math">O(n² + n) → O(n²) &nbsp;·&nbsp; O(n + 100) → O(n)</span>
+        </div>
+      </div>
+
+      <div class="rule">
+        <div class="rule-icon">כלל 4</div>
+        <div class="rule-body">
+          <strong>לולאות מוכפלות — לא מחוברות</strong>
+          <p>לולאה בתוך לולאה = כפל. לולאה אחרי לולאה = חיבור (שנהפך לדומיננטי).</p>
+          <span class="math">לולאה בתוך לולאה: O(n × n) = O(n²)</span>
+          <span class="math">לולאה אחרי לולאה: O(n + n) = O(2n) → O(n)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 5: טבלת זיהוי -->
+  <div class="section">
+    <div class="section-label">כלל אצבע לזיהוי מהיר</div>
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>סימן בקוד</th>
+              <th>סיבוכיות</th>
+              <th>דוגמה</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>אין לולאות</td>
+              <td><span class="td-badge" style="background:var(--green-bg);color:#5DCAA5;">O(1)</span></td>
+              <td style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">arr[i], map.get()</td>
+            </tr>
+            <tr>
+              <td>לולאה אחת</td>
+              <td><span class="td-badge" style="background:var(--blue-bg);color:var(--blue-light);">O(n)</span></td>
+              <td style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">reverse(), sum()</td>
+            </tr>
+            <tr>
+              <td>חצייה בכל צעד</td>
+              <td><span class="td-badge" style="background:var(--blue-bg);color:var(--blue-light);">O(log n)</span></td>
+              <td style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">binarySearch()</td>
+            </tr>
+            <tr>
+              <td>לולאה + חצייה</td>
+              <td><span class="td-badge" style="background:var(--purple-bg);color:var(--purple-light);">O(n log n)</span></td>
+              <td style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">mergeSort()</td>
+            </tr>
+            <tr>
+              <td>לולאה בתוך לולאה</td>
+              <td><span class="td-badge" style="background:var(--orange-bg);color:#F0997B;">O(n²)</span></td>
+              <td style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">bubbleSort()</td>
+            </tr>
+            <tr>
+              <td>רקורסיה שמתפצלת</td>
+              <td><span class="td-badge" style="background:var(--red-bg);color:var(--red-light);">O(2ⁿ)</span></td>
+              <td style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">fibonacci נאיבי</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top:1.25rem;">
+      <p>
+        <strong>למה reverse() הוא O(n) ולא O(n/2)?</strong><br>
+        נכון שעוברים רק על חצי המערך — אבל O(n/2) = O(n) לפי כלל 2. הקבוע ½ לא משנה את הקצב הכללי. אם המערך גדל פי 2, מספר הפעולות גדל פי 2 — זה ליניארי.
+      </p>
+    </div>
+
+    <div class="note">
+      <strong>למה לא O(n log n)?</strong><br>
+      O(n log n) מגיע מאלגוריתמים שגם עוברים על הנתונים וגם מחלקים את הבעיה שוב ושוב (כמו Merge Sort). ב-reverse אין חלוקה בכלל — רק מעבר ישיר אחד, לכן O(n).
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="reverse-array-guide.html">← חזרה למדריך Reverse Array</a>
+  &nbsp;·&nbsp;
+  מדריך Java · Big O Notation
+</footer>
+
+</body>
+</html>
