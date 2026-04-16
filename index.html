@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מבני נתונים ואלגוריתמים – דף הבית</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            color: #2c3e50;
+            line-height: 1.7;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1E2761 0%, #2a3a8a 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        header h1 { font-size: 2.6em; margin-bottom: 12px; font-weight: 700; }
+        header .subtitle { font-size: 1.1em; opacity: 0.85; }
+
+        main { padding: 50px 40px; }
+
+        .intro-box {
+            background: linear-gradient(135deg, #e8eef5 0%, #f0f4fa 100%);
+            border-right: 5px solid #1E2761;
+            padding: 20px 25px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            font-size: 1.05em;
+        }
+
+        h2 {
+            color: #1E2761;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-right: 14px;
+            border-right: 5px solid #1E2761;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin-bottom: 50px;
+        }
+
+        .category-card {
+            background: white;
+            border: 2px solid #e1e5ee;
+            border-radius: 14px;
+            padding: 35px 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .category-card:hover {
+            border-color: #1E2761;
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(30, 39, 97, 0.15);
+        }
+
+        .category-card .icon {
+            font-size: 2.8em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .category-card h3 {
+            color: #1E2761;
+            font-size: 1.45em;
+            margin-bottom: 10px;
+        }
+
+        .category-card p {
+            color: #718096;
+            font-size: 0.97em;
+            margin-bottom: 18px;
+        }
+
+        .category-card .topics {
+            list-style: none;
+            padding: 0;
+        }
+
+        .category-card .topics li {
+            color: #4a5568;
+            font-size: 0.9em;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e1e5ee;
+        }
+
+        .category-card .topics li:last-child { border-bottom: none; }
+
+        .category-card .topics li::before {
+            content: "← ";
+            color: #1E2761;
+            font-weight: bold;
+        }
+
+        .enter-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #1E2761;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .category-card:hover .enter-btn { background: #2a3a8a; }
+
+        footer {
+            background: #f8f9fc;
+            padding: 20px 40px;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9em;
+            border-top: 1px solid #e1e5ee;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            main { padding: 25px 20px; }
+            header { padding: 30px 20px; }
+            header h1 { font-size: 1.9em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>מבני נתונים ואלגוריתמים</h1>
+            <p class="subtitle">סיכומים, מדריכים ושאלות ראיון | Java</p>
+        </header>
+
+        <main>
+            <div class="intro-box">
+                ברוכים הבאים! כאן תמצאו סיכומים מפורטים של מבני נתונים ואלגוריתמים, לצד מדריכים לשאלות ראיון. הכל מוסבר בעברית עם מימושים בשפת Java.
+            </div>
+
+            <h2>בחרו קטגוריה</h2>
+
+            <div class="categories">
+                <a href="dataSteracExplain/index.html" class="category-card">
+                    <span class="icon">📚</span>
+                    <h3>סיכומי מבני נתונים</h3>
+                    <p>הסברים תיאורטיים מלאים, מימושי Java וניתוח סיבוכיות לכל מבנה.</p>
+                    <ul class="topics">
+                        <li>מבוא ורקורסיה</li>
+                        <li>חסמים אסימפטוטיים</li>
+                        <li>Merge Sort / Quick Sort / Quick Select</li>
+                        <li>Linked List, Stack, Queue</li>
+                        <li>עצים בינאריים ו-Bucket Sort</li>
+                    </ul>
+                    <span class="enter-btn">כניסה לסיכומים ←</span>
+                </a>
+
+                <a href="interviewQustions/complexity.html" class="category-card">
+                    <span class="icon">🎯</span>
+                    <h3>שאלות ראיון</h3>
+                    <p>מדריכים ממוקדים לשאלות קלאסיות בראיונות עבודה טכניים.</p>
+                    <ul class="topics">
+                        <li>ניתוח סיבוכיות – Big O</li>
+                        <li>היפוך מערך</li>
+                    </ul>
+                    <span class="enter-btn">כניסה לשאלות ←</span>
+                </a>
+            </div>
+        </main>
+
+        <footer>
+            <p>מבוסס על חומרי הקורס של יעקב פינקלשטיין</p>
+        </footer>
+    </div>
+</body>
+</html>
