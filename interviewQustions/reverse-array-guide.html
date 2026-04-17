@@ -350,6 +350,287 @@
         </div>
       </div>
 
+      <!-- SWAP breakdown — full detail -->
+      <div style="border-right:3px solid rgba(203,166,247,0.35);display:flex;flex-direction:column;gap:0;">
+
+        <!-- intro connector -->
+        <div style="display:flex;align-items:center;gap:10px;padding:0.6rem 1.25rem;">
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.25);"></div>
+          <span style="font-size:12px;color:#cba6f7;font-family:var(--mono);white-space:nowrap;background:rgba(203,166,247,0.1);border:1px solid rgba(203,166,247,0.3);border-radius:6px;padding:3px 10px;">↳ reverse קוראת ל-swap — פירוט מלא</span>
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.25);"></div>
+        </div>
+
+        <!-- context: where swap fits in reverse -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);background:rgba(203,166,247,0.04);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:18px;">⇄</div>
+          <div class="step-body">
+            <h3 style="color:#cba6f7;">איפה swap חייה בתוך reverse?</h3>
+            <p>reverse מגדירה שני מצביעים ומריצה לולאה. בכל סיבוב היא קוראת ל-swap ומעבירה לה את המערך ואת שני האינדקסים. swap היא פונקציה נפרדת לחלוטין — היא לא יודעת על reverse, לא יודעת כמה גדול המערך, לא יודעת שאנחנו עושים היפוך. תפקידה יחידה: לקחת שני אינדקסים ולהחליף בין התאים.</p>
+            <p style="margin-top:0.5rem;">שים לב לשמות הפרמטרים: reverse קוראת <code style="font-family:var(--mono);color:var(--blue-light);">left</code> ו-<code style="font-family:var(--mono);color:#F0997B;">right</code> — swap מקבלת אותם ומכנה אותם <code style="font-family:var(--mono);color:var(--blue-light);">i</code> ו-<code style="font-family:var(--mono);color:#F0997B;">j</code>. זה אותם ערכים, רק שמות שונים בתוך הפונקציה.</p>
+            <div style="margin-top:0.75rem;background:#12131f;border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-family:var(--mono);font-size:13px;line-height:2.1;direction:ltr;">
+              <div style="color:#4a5170;font-style:italic;font-size:12px;margin-bottom:4px;">// reverse</div>
+              <div><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;">[] reverse(</span><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;">[] arr) {</span></div>
+              <div><span style="color:#cdd6f4;">&nbsp;&nbsp;</span><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;"> left = </span><span style="color:#fab387;">0</span><span style="color:#cdd6f4;">;</span></div>
+              <div><span style="color:#cdd6f4;">&nbsp;&nbsp;</span><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;"> right = arr.length - </span><span style="color:#fab387;">1</span><span style="color:#cdd6f4;">;</span></div>
+              <div><span style="color:#cdd6f4;">&nbsp;&nbsp;</span><span style="color:#cba6f7;">while</span><span style="color:#cdd6f4;"> (left &lt; right) {</span></div>
+              <div style="background:rgba(203,166,247,0.1);border-radius:4px;"><span style="color:#cdd6f4;">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#cba6f7;font-weight:600;">swap</span><span style="color:#cdd6f4;">(arr, left, right);</span><span style="color:#4a5170;font-style:italic;">&nbsp;&nbsp;&larr; i=left, j=right</span></div>
+              <div><span style="color:#cdd6f4;">&nbsp;&nbsp;&nbsp;&nbsp;left++;</span></div>
+              <div><span style="color:#cdd6f4;">&nbsp;&nbsp;&nbsp;&nbsp;right--;</span></div>
+              <div><span style="color:#cdd6f4;">&nbsp;&nbsp;}</span></div>
+              <div><span style="color:#cdd6f4;">&nbsp;&nbsp;</span><span style="color:#cba6f7;">return</span><span style="color:#cdd6f4;"> arr;</span></div>
+              <div><span style="color:#cdd6f4;">}</span></div>
+            </div>
+            <div style="margin-top:0.5rem;background:#12131f;border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;font-family:var(--mono);font-size:13px;line-height:2.1;direction:ltr;">
+              <div style="color:#4a5170;font-style:italic;font-size:12px;margin-bottom:4px;">// swap — void, לא מחזירה ערך</div>
+              <div><span style="color:#89b4fa;">void</span><span style="color:#cdd6f4;"> swap(</span><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;">[] arr, </span><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;"> i, </span><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;"> j) {</span></div>
+              <div style="background:rgba(203,166,247,0.07);"><span style="color:#cdd6f4;">&nbsp;&nbsp;</span><span style="color:#89b4fa;">int</span><span style="color:#cdd6f4;"> temp = arr[i];</span><span style="color:#4a5170;font-style:italic;">&nbsp;&nbsp;&larr; שלב a</span></div>
+              <div style="background:rgba(203,166,247,0.07);"><span style="color:#cdd6f4;">&nbsp;&nbsp;arr[i] = arr[j];</span><span style="color:#4a5170;font-style:italic;">&nbsp;&nbsp;&larr; שלב b</span></div>
+              <div style="background:rgba(203,166,247,0.07);"><span style="color:#cdd6f4;">&nbsp;&nbsp;arr[j] = temp;</span><span style="color:#4a5170;font-style:italic;">&nbsp;&nbsp;&nbsp;&larr; שלב c</span></div>
+              <div><span style="color:#cdd6f4;">}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHY TEMP -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:16px;">?</div>
+          <div class="step-body">
+            <h3>למה צריך 3 שורות ומשתנה temp? למה לא פשוט 2 שורות?</h3>
+            <p>נניח שמישהו כתב ישירות, בלי temp:</p>
+            <div style="margin:0.5rem 0;background:#12131f;border:1px solid rgba(216,90,48,0.4);border-radius:10px;padding:0.75rem 1.25rem;font-family:var(--mono);font-size:13px;line-height:2.1;direction:ltr;">
+              <div style="color:#4a5170;font-style:italic;font-size:12px;">// ❌ קוד שגוי</div>
+              <div><span style="color:#f38ba8;">arr[i] = arr[j];</span><span style="color:#4a5170;font-style:italic;">&nbsp;&nbsp;// arr[0]=5. הערך 1 נדרס!</span></div>
+              <div><span style="color:#f38ba8;">arr[j] = arr[i];</span><span style="color:#4a5170;font-style:italic;">&nbsp;&nbsp;// arr[4]=arr[0]=5. BUG!</span></div>
+            </div>
+            <p>תוצאה: <code style="font-family:var(--mono);color:#f38ba8;">[5, 2, 3, 4, 5]</code> — שני הקצות = 5. הערך 1 נעלם לתמיד.</p>
+            <p style="margin-top:0.5rem;">אנלוגיה: שתי כוסות — א עם מיץ תפוז, ב עם מיץ לימון. רוצים להחליף. אם נשפוך א לתוך ב — איבדנו את הלימון. חייבים כוס שלישית ריקה (temp) לשמור אחד הנוזלים.</p>
+          </div>
+        </div>
+
+        <!-- TRACE TABLE -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:13px;">≡</div>
+          <div class="step-body">
+            <h3>טבלת מעקב — כמה פעמים הלולאה רצה?</h3>
+            <p>מערך <code style="font-family:var(--mono);">[1, 2, 3, 4, 5]</code> — גודל n=5. הלולאה תרץ <strong style="color:#cba6f7;">⌊5/2⌋ = 2 פעמים</strong>. בכל סיבוב reverse שולחת left ו-right ל-swap. swap מקבלת אותם כ-i וכ-j.</p>
+            <div style="margin-top:0.75rem;overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;direction:ltr;min-width:540px;">
+                <thead>
+                  <tr style="background:rgba(203,166,247,0.12);">
+                    <th style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#cba6f7;font-weight:500;">סיבוב</th>
+                    <th style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--blue-light);">left &rarr; i</th>
+                    <th style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#F0997B;">right &rarr; j</th>
+                    <th style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--blue-light);">arr[i]</th>
+                    <th style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#F0997B;">arr[j]</th>
+                    <th style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#cba6f7;">temp</th>
+                    <th style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#5DCAA5;">מערך אחרי swap</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#cba6f7;font-weight:600;">1</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--blue-light);">0</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#F0997B;">4</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--blue-light);">1</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#F0997B;">5</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#cba6f7;">1</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#5DCAA5;">[<strong>5</strong>, 2, 3, 4, <strong>1</strong>]</td>
+                  </tr>
+                  <tr style="background:rgba(255,255,255,0.02);">
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#cba6f7;font-weight:600;">2</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--blue-light);">1</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#F0997B;">3</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--blue-light);">2</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#F0997B;">4</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#cba6f7;">2</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#5DCAA5;">[5, <strong>4</strong>, 3, <strong>2</strong>, 1]</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);">עצירה</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);">2</td>
+                    <td style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);">2</td>
+                    <td colspan="4" style="padding:9px 10px;text-align:center;border:1px solid rgba(255,255,255,0.08);color:#f38ba8;">2 &lt; 2? לא — הלולאה נגמרת</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="margin-top:0.75rem;font-size:13px;color:var(--text-muted);">כלל כללי: עבור מערך בגודל n — הלולאה תרץ תמיד ⌊n/2⌋ פעמים. n=4 &rarr; 2. n=6 &rarr; 3. n=7 &rarr; 3 (אמצע לא מוחלף).</p>
+          </div>
+        </div>
+
+        <!-- ITERATION 1 separator -->
+        <div style="display:flex;align-items:center;gap:10px;padding:0.6rem 1.25rem;">
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.2);"></div>
+          <span style="font-size:12px;color:#cba6f7;font-family:var(--mono);background:rgba(203,166,247,0.1);border:1px solid rgba(203,166,247,0.3);border-radius:6px;padding:3px 10px;white-space:nowrap;">סיבוב 1: while(0 &lt; 4) &check; &rarr; swap(arr, 0, 4) &rarr; i=0, j=4</span>
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.2);"></div>
+        </div>
+
+        <!-- 1a -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:10px;">1&middot;a</div>
+          <div class="step-body">
+            <h3><code style="font-family:var(--mono);font-size:14px;color:#cba6f7;">int temp = arr[i]</code> — i=0, arr[0]=1</h3>
+            <p>swap קיבלה i=0 ו-j=4. שורה ראשונה: שומרים גיבוי של arr[0] (=1) ב-temp. המערך עצמו לא השתנה עדיין — פשוט עתקנו ערך למשתנה חדש. בלי זה — ברגע שנכתוב arr[0]=arr[4] בשלב הבא, הערך 1 ייעלם לתמיד.</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell blue">1</div><div class="cell-label blue">arr[0]=i</div></div>
+              <div class="cell-wrap"><div class="cell">2</div><div class="cell-idx">[1]</div></div>
+              <div class="cell-wrap"><div class="cell">3</div><div class="cell-idx">[2]</div></div>
+              <div class="cell-wrap"><div class="cell">4</div><div class="cell-idx">[3]</div></div>
+              <div class="cell-wrap"><div class="cell orange">5</div><div class="cell-label orange">arr[4]=j</div></div>
+              <div style="align-self:center;font-size:20px;color:var(--text-muted);margin:0 8px;">&rarr;</div>
+              <div class="cell-wrap"><div class="cell" style="border-color:#cba6f7;background:rgba(203,166,247,0.1);color:#cba6f7;">1</div><div class="cell-label" style="color:#cba6f7;">temp</div></div>
+            </div>
+            <p style="margin-top:0.6rem;font-size:13px;">מצב: arr = [1, 2, 3, 4, 5] (לא השתנה), temp = 1</p>
+          </div>
+        </div>
+
+        <!-- 1b -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:10px;">1&middot;b</div>
+          <div class="step-body">
+            <h3><code style="font-family:var(--mono);font-size:14px;color:#cba6f7;">arr[i] = arr[j]</code> — arr[0] = arr[4] = 5</h3>
+            <p>שורה שנייה: קוראים את arr[4] (=5) וכותבים ל-arr[0]. עכשיו arr[0] = 5. arr[4] עדיין = 5 (לא נגענו בו), ו-temp עדיין מחזיק את 1.</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell green">5</div><div class="cell-label green">arr[0] ✓</div></div>
+              <div class="cell-wrap"><div class="cell">2</div><div class="cell-idx">[1]</div></div>
+              <div class="cell-wrap"><div class="cell">3</div><div class="cell-idx">[2]</div></div>
+              <div class="cell-wrap"><div class="cell">4</div><div class="cell-idx">[3]</div></div>
+              <div class="cell-wrap"><div class="cell orange">5</div><div class="cell-label orange">arr[4]=j</div></div>
+              <div style="align-self:center;font-size:20px;color:var(--text-muted);margin:0 8px;">|</div>
+              <div class="cell-wrap"><div class="cell" style="border-color:#cba6f7;background:rgba(203,166,247,0.1);color:#cba6f7;">1</div><div class="cell-label" style="color:#cba6f7;">temp</div></div>
+            </div>
+            <p style="margin-top:0.6rem;font-size:13px;">מצב: arr = [<strong style="color:#5DCAA5;">5</strong>, 2, 3, 4, 5], temp = 1</p>
+          </div>
+        </div>
+
+        <!-- 1c -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:10px;">1&middot;c</div>
+          <div class="step-body">
+            <h3><code style="font-family:var(--mono);font-size:14px;color:#cba6f7;">arr[j] = temp</code> — arr[4] = 1</h3>
+            <p>שורה שלישית: לוקחים את temp (=1) וכותבים ל-arr[4]. עכשיו arr[4] = 1. ההחלפה הושלמה! swap מסיימת ומחזירת void — לא מחזירת ערך; המערך שונה ישירות בזיכרון.</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell green">5</div><div class="cell-idx">[0] ✓</div></div>
+              <div class="cell-wrap"><div class="cell">2</div><div class="cell-idx">[1]</div></div>
+              <div class="cell-wrap"><div class="cell">3</div><div class="cell-idx">[2]</div></div>
+              <div class="cell-wrap"><div class="cell">4</div><div class="cell-idx">[3]</div></div>
+              <div class="cell-wrap"><div class="cell green">1</div><div class="cell-idx">[4] ✓</div></div>
+            </div>
+            <p style="margin-top:0.6rem;font-size:13px;">מצב: arr = [<strong style="color:#5DCAA5;">5</strong>, 2, 3, 4, <strong style="color:#5DCAA5;">1</strong>] — שני הקצות הוחלפו!</p>
+          </div>
+        </div>
+
+        <!-- back to reverse after iter 1 -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);background:rgba(203,166,247,0.02);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:14px;">↩</div>
+          <div class="step-body">
+            <h3>חזרה ל-reverse אחרי סיבוב 1: left++ ו-right--</h3>
+            <p>swap הסתיימה. reverse ממשיכה לשורות 7–8: <code style="font-family:var(--mono);color:var(--blue-light);">left++</code> (0&rarr;1) ו-<code style="font-family:var(--mono);color:#F0997B;">right--</code> (4&rarr;3). בודקים תנאי הלולאה: 1 &lt; 3? כן — ממשיכים לסיבוב שני.</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell green">5</div><div class="cell-idx">[0] ✓</div></div>
+              <div class="cell-wrap"><div class="cell blue">2</div><div class="cell-label blue">left=1</div></div>
+              <div class="cell-wrap"><div class="cell">3</div><div class="cell-idx">[2]</div></div>
+              <div class="cell-wrap"><div class="cell orange">4</div><div class="cell-label orange">right=3</div></div>
+              <div class="cell-wrap"><div class="cell green">1</div><div class="cell-idx">[4] ✓</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITERATION 2 separator -->
+        <div style="display:flex;align-items:center;gap:10px;padding:0.6rem 1.25rem;">
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.2);"></div>
+          <span style="font-size:12px;color:#cba6f7;font-family:var(--mono);background:rgba(203,166,247,0.1);border:1px solid rgba(203,166,247,0.3);border-radius:6px;padding:3px 10px;white-space:nowrap;">סיבוב 2: while(1 &lt; 3) &check; &rarr; swap(arr, 1, 3) &rarr; i=1, j=3</span>
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.2);"></div>
+        </div>
+
+        <!-- 2a -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:10px;">2&middot;a</div>
+          <div class="step-body">
+            <h3><code style="font-family:var(--mono);font-size:14px;color:#cba6f7;">int temp = arr[i]</code> — i=1, arr[1]=2</h3>
+            <p>הסיבוב השני: reverse שולחת left=1, right=3 ל-swap. swap מקבלת i=1, j=3. שורה ראשונה: שומרים arr[1] (=2) ב-temp. שוב גיבוי לפני שנדרוס.</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell green">5</div><div class="cell-idx">[0] ✓</div></div>
+              <div class="cell-wrap"><div class="cell blue">2</div><div class="cell-label blue">arr[1]=i</div></div>
+              <div class="cell-wrap"><div class="cell">3</div><div class="cell-idx">[2]</div></div>
+              <div class="cell-wrap"><div class="cell orange">4</div><div class="cell-label orange">arr[3]=j</div></div>
+              <div class="cell-wrap"><div class="cell green">1</div><div class="cell-idx">[4] ✓</div></div>
+              <div style="align-self:center;font-size:20px;color:var(--text-muted);margin:0 8px;">&rarr;</div>
+              <div class="cell-wrap"><div class="cell" style="border-color:#cba6f7;background:rgba(203,166,247,0.1);color:#cba6f7;">2</div><div class="cell-label" style="color:#cba6f7;">temp</div></div>
+            </div>
+            <p style="margin-top:0.6rem;font-size:13px;">מצב: arr = [5, 2, 3, 4, 1] (לא השתנה), temp = 2</p>
+          </div>
+        </div>
+
+        <!-- 2b -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:10px;">2&middot;b</div>
+          <div class="step-body">
+            <h3><code style="font-family:var(--mono);font-size:14px;color:#cba6f7;">arr[i] = arr[j]</code> — arr[1] = arr[3] = 4</h3>
+            <p>קוראים את arr[3] (=4) וכותבים ל-arr[1]. עכשיו arr[1] = 4. arr[3] עדיין = 4, temp עדיין מחזיק את 2.</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell green">5</div><div class="cell-idx">[0] ✓</div></div>
+              <div class="cell-wrap"><div class="cell green">4</div><div class="cell-label green">arr[1] ✓</div></div>
+              <div class="cell-wrap"><div class="cell">3</div><div class="cell-idx">[2]</div></div>
+              <div class="cell-wrap"><div class="cell orange">4</div><div class="cell-label orange">arr[3]=j</div></div>
+              <div class="cell-wrap"><div class="cell green">1</div><div class="cell-idx">[4] ✓</div></div>
+              <div style="align-self:center;font-size:20px;color:var(--text-muted);margin:0 8px;">|</div>
+              <div class="cell-wrap"><div class="cell" style="border-color:#cba6f7;background:rgba(203,166,247,0.1);color:#cba6f7;">2</div><div class="cell-label" style="color:#cba6f7;">temp</div></div>
+            </div>
+            <p style="margin-top:0.6rem;font-size:13px;">מצב: arr = [5, <strong style="color:#5DCAA5;">4</strong>, 3, 4, 1], temp = 2</p>
+          </div>
+        </div>
+
+        <!-- 2c -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:10px;">2&middot;c</div>
+          <div class="step-body">
+            <h3><code style="font-family:var(--mono);font-size:14px;color:#cba6f7;">arr[j] = temp</code> — arr[3] = 2</h3>
+            <p>כותבים temp=2 ל-arr[3]. עכשיו arr[3] = 2. swap מחזירת void. המערך עכשיו [5, 4, 3, 2, 1].</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell green">5</div><div class="cell-idx">[0] ✓</div></div>
+              <div class="cell-wrap"><div class="cell green">4</div><div class="cell-idx">[1] ✓</div></div>
+              <div class="cell-wrap"><div class="cell">3</div><div class="cell-idx">[2]</div></div>
+              <div class="cell-wrap"><div class="cell green">2</div><div class="cell-label green">arr[3] ✓</div></div>
+              <div class="cell-wrap"><div class="cell green">1</div><div class="cell-idx">[4] ✓</div></div>
+            </div>
+            <p style="margin-top:0.6rem;font-size:13px;">מצב: arr = [5, 4, 3, <strong style="color:#5DCAA5;">2</strong>, 1] — 4 קצות הוחלפו!</p>
+          </div>
+        </div>
+
+        <!-- back to reverse after iter 2 -->
+        <div class="step" style="border-color:rgba(203,166,247,0.2);background:rgba(203,166,247,0.02);">
+          <div class="step-num" style="background:rgba(203,166,247,0.15);border-color:rgba(203,166,247,0.4);color:#cba6f7;font-size:14px;">↩</div>
+          <div class="step-body">
+            <h3>חזרה ל-reverse אחרי סיבוב 2: left++ ו-right--</h3>
+            <p><code style="font-family:var(--mono);color:var(--blue-light);">left++</code> (1&rarr;2) ו-<code style="font-family:var(--mono);color:#F0997B;">right--</code> (3&rarr;2). בודקים תנאי: <strong style="color:#f38ba8;">2 &lt; 2? לא!</strong> — שנייהם שווים, התנאי שקרי. הלולאה נגמרת.</p>
+            <div class="array-visual" style="margin-top:0.75rem;">
+              <div class="cell-wrap"><div class="cell green">5</div><div class="cell-idx">[0] ✓</div></div>
+              <div class="cell-wrap"><div class="cell green">4</div><div class="cell-idx">[1] ✓</div></div>
+              <div class="cell-wrap"><div class="cell" style="border-color:#cba6f7;background:rgba(203,166,247,0.1);color:#cba6f7;">3</div><div class="cell-label" style="color:#cba6f7;">left=right=2</div></div>
+              <div class="cell-wrap"><div class="cell green">2</div><div class="cell-idx">[3] ✓</div></div>
+              <div class="cell-wrap"><div class="cell green">1</div><div class="cell-idx">[4] ✓</div></div>
+            </div>
+            <p style="margin-top:0.6rem;font-size:13px;">האמצע (אינדקס 2, ערך 3) נשאר במקומו — הוא כבר במיקום הנכון ולא צריך להתחלף.</p>
+          </div>
+        </div>
+
+        <!-- summary note -->
+        <div class="note" style="border-radius:10px;">
+          <strong>סיכום: כמה פעמים הלולאה רצה? ⌊n/2⌋ = ⌊5/2⌋ = 2 פעמים</strong><br>
+          סיבוב 1: swap(arr,0,4) — i=0,j=4. סיבוב 2: swap(arr,1,3) — i=1,j=3. בכל סיבוב swap קיבלה ערכי i ו-j שונים, אבל אותן 3 שורות קוד בדיוק. זו סיבת O(n) — מספר הקריאות ל-swap גדל ליניארית עם גודל הקליט.
+        </div>
+
+        <!-- closing connector -->
+        <div style="display:flex;align-items:center;gap:10px;padding:0.6rem 1.25rem;">
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.25);"></div>
+          <span style="font-size:12px;color:#cba6f7;font-family:var(--mono);white-space:nowrap;background:rgba(203,166,247,0.1);border:1px solid rgba(203,166,247,0.3);border-radius:6px;padding:3px 10px;">סוף הסבר swap ↓ שלב 3</span>
+          <div style="flex:1;height:1px;background:rgba(203,166,247,0.25);"></div>
+        </div>
+
+      </div>
+
+
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
